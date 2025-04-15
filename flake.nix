@@ -17,6 +17,8 @@
 
                 dependencies = with pkgs.python312Packages; [
                     pyserial
+
+                    certifi
                     websockets
                 ];
 

@@ -26,3 +26,12 @@
   ```bash
   autopep8 --in-place --recursive src/
   ```
+- L'ordre dels imports és el següent:
+  ```python
+  import asyncio        # Primer els imports de la stdlib
+  from uuid import UUID # Tots els imports en ordre alfabètic.
+  
+  import websockets     # Després els imports de llibreries externes
+
+  import car            # Per últim els imports del propi projecte
+  ```
