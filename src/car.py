@@ -4,6 +4,8 @@ from serial import Serial
 import ssl
 from ssl import SSLContext
 from uuid import UUID
+from ultrasonic import Ultrasonic
+from motors import Motors
 
 import certifi
 import websockets
@@ -31,6 +33,7 @@ class Car:
         self.serial_port = Serial(serial_port, self.BAUD_RATE, timeout=1)
 
         self.ignore = ignore
+        PWM = Motors()
 
     async def connect(self, controller: str):
         async with websockets.connect(controller, ssl=self.ssl_context) as websocket:
@@ -73,3 +76,19 @@ class Car:
                             "rssi": rssi,
                         }
                     )
+
+    def stop_car(self):
+        PWM.set_motor_model(0,0,0,0);
+        
+    def move_forward(self):
+        PWM.set_motor_model(1000, 1000, 1000, 1000);
+        
+    def move_backwards():
+        PWM.set_motor_model(-1000,-1000,-1000,-1000)
+        
+    def move_left():
+        PWM.set_motor_model(-1000,-1000,1000,1000)
+        
+    def move_right():
+        PWM.set_motor_model(1000,1000,-1000,-1000)
+    
