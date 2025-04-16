@@ -65,7 +65,6 @@ class Car:
                 # If we're not recieving, check if we should and jump to the next iteration
                 else:
                     if line.startswith(self.MEASUREMENT_END):
-                        print(access_points)
                         return access_points
 
                 # If we reached this point it means we're recieving a measurement
