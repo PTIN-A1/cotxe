@@ -1,6 +1,6 @@
 # Software cotxe físic
 
-![Static Badge](https://img.shields.io/badge/Python-3.12-gray?style=for-the-badge&logo=python&logoColor=white&labelColor=%233671a2) ![Static Badge](https://img.shields.io/badge/Nix-24.11-gray?style=for-the-badge&logo=nixos&logoColor=white&labelColor=%237eb7e1) ![Static Badge](https://img.shields.io/badge/License-MIT%2FApache-gray?style=for-the-badge&logo=gitbook&logoColor=white&labelColor=blue)
+![Static Badge](https://img.shields.io/badge/Python-3.9-gray?style=for-the-badge&logo=python&logoColor=white&labelColor=%233671a2) ![Static Badge](https://img.shields.io/badge/Nix-24.11-gray?style=for-the-badge&logo=nixos&logoColor=white&labelColor=%237eb7e1) ![Static Badge](https://img.shields.io/badge/License-MIT%2FApache-gray?style=for-the-badge&logo=gitbook&logoColor=white&labelColor=blue)
 
 ## Setup:
 - És necessari activar els busos necessaris per al cotxe. Utilitzeu
@@ -13,8 +13,6 @@
   ```bash
   sudo usermod -aG i2c radxa
   ```
-
-- S'ha d'instal·lar Python3.12. [**Instruccions »**](https://www.build-python-from-source.com/)
 
 - S'ha d'instal·lar les dependències de python
   ```bash

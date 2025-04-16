@@ -34,12 +34,15 @@ class Car:
 
     async def connect(self, controller: str):
         async with websockets.connect(controller, ssl=self.ssl_context) as websocket:
-            asyncio.create_task(self.send_location(websocket))
+            await self.send_location(websocket)
 
     async def send_location(self, websocket):
         while True:
-            location = await self.get_ap_rssis()
-            await websocket.send(json.dumps({"location": location}))
+            try:
+                location = await self.get_ap_rssis()
+                await websocket.send(json.dumps({"location": location}))
+            except Exception as e:
+                print(f"Error sending location: {e}")  # TODO log
 
     async def get_ap_rssis(self) -> dict:
         access_points = []
@@ -50,16 +53,17 @@ class Car:
             if self.serial_port.in_waiting > 0:
                 line = self.serial_port.readline().decode("utf-8").rstrip()
 
-                # If we've reached the end of a measurement, return the measurement
-                if line.startswith(self.MEASUREMENT_END):
-                    return access_points
-
-                # If we're not recieving, check if we should and jump to the next iteration
                 if not recieving:
                     if line.startswith(self.MEASUREMENT_START):
                         recieving = True
 
                     continue
+
+                # If we're not recieving, check if we should and jump to the next iteration
+                else:
+                    if line.startswith(self.MEASUREMENT_END):
+                        print(access_points)
+                        return access_points
 
                 # If we reached this point it means we're recieving a measurement
                 measurement = json.loads(line)

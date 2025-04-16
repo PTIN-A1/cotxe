@@ -1,11 +1,13 @@
 __version__ = "0.1.0"
 
 import os
+import time
+import asyncio
 
 from car import Car
 
 
-def main():
+async def main():
     id = os.getenv("CAR_ID", "00000000-0000-0000-0000-000000000000")
     serial_port = os.getenv("CAR_SERIAL_PORT", "/dev/ttyUSB0")
     ignore = [
@@ -14,8 +16,11 @@ def main():
     controller = os.getenv("CAR_CONTROLLER", "wss://localhost:8000")
 
     car = Car(id, serial_port, ignore)
-    car.connect(controller)
+    await car.connect(controller)
+
+    while True:
+        time.sleep(1)
 
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(main())
