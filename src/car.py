@@ -34,7 +34,10 @@ class Car:
 
     async def connect(self, controller: str):
         async with websockets.connect(controller, ssl=self.ssl_context) as websocket:
-            await self.send_location(websocket)
+            asyncio.create_task(self.send_location(websocket))
+
+            while True:
+                await asyncio.sleep(1)
 
     async def send_location(self, websocket):
         while True:
