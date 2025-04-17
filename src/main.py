@@ -16,11 +16,10 @@ async def main():
     ignore = [
         ap.strip() for ap in os.getenv("CAR_AP_IGNORE", "").split(",") if ap.strip()
     ]
-    # controller = os.getenv("CAR_CONTROLLER", "wss://localhost:8000")
+    controller = os.getenv("CAR_CONTROLLER", "wss://localhost:8000")
 
     car = Car(id, serial_port, ignore, "/dev/i2c-7")
-    car.move(Car.Direction.Forward)
-    # await car.connect_websocket(controller)
+    await car.connect_websocket(controller)
 
     while True:
         time.sleep(1)

@@ -14,6 +14,21 @@ class Powertrain:
         Right = (2000, -2000, 2000, -2000)
         Stop = (0, 0, 0, 0)
 
+        def from_str(self, direction: str):
+            direction = direction.lower()
+
+            # No match statement in python 3.9!!
+            if direction == "forward":
+                return self.Forward
+            elif direction == "back":
+                return self.Back
+            elif direction == "left":
+                return self.Left
+            elif direction == "right":
+                return self.Right
+            else:
+                return self.Stop
+
     class Motor(Enum):
         TopLeft = (0, 0, 1)
         TopRight = (1, 6, 7)

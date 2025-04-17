@@ -65,5 +65,10 @@ class Car(Esp32, Powertrain):
                 recieved = json.loads(recieved)
                 log.debug("Parsed message to json succesfully.")
 
+                # No match statement in python 3.9!!
+                if recieved["command"] == "move":
+                    direction = self.Direction.from_str(recieved["direction"])
+                    self.move(direction)
+
             except Exception as e:
                 log.error(f"Failed to recieve from websocket: {e}")
