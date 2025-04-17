@@ -1,5 +1,5 @@
 from enum import Enum
-
+import logging as log
 
 from PCA9685_smbus2 import PCA9685
 
@@ -21,8 +21,10 @@ class Powertrain:
         BottomRight = (3, 4, 5)
 
     def connect_powertain(self, interface: str):
+        log.info(f"Connecting to powertrain on interface {interface}...")
         self.pwm = PCA9685.PCA9685(interface=interface)
         self.pwm.set_pwm_freq(50)
+        log.info("Successfully connected to and configured the powertrain.")
 
     def set_motor(self, motor: Motor, direction: Direction):
         (index, channel_a, channel_b) = motor.value
@@ -41,6 +43,7 @@ class Powertrain:
             self.pwm.set_pwm(channel_b, 0, 4095)
 
     def move(self, direction: Direction):
+        log.debug(f"Moving motors in direction {direction}")
         self.set_motor(self.Motor.TopLeft, direction)
         self.set_motor(self.Motor.TopRight, direction)
         self.set_motor(self.Motor.BottomRight, direction)

@@ -1,10 +1,13 @@
 __version__ = "0.1.0"
 
+import asyncio
+import logging
 import os
 import time
-import asyncio
 
 from car import Car
+
+logging.getLogger().setLevel(level=os.getenv("LOG_LEVEL", "INFO").upper())
 
 
 async def main():
