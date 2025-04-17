@@ -1,10 +1,13 @@
-__version__ = "0.1.0"
+__version__ = "0.1.2"
 
+import asyncio
+import logging
 import os
 import time
-import asyncio
 
 from car import Car
+
+logging.getLogger().setLevel(level=os.getenv("CAR_LOG_LEVEL", "INFO").upper())
 
 
 async def main():
@@ -15,8 +18,8 @@ async def main():
     ]
     controller = os.getenv("CAR_CONTROLLER", "wss://localhost:8000")
 
-    car = Car(id, serial_port, ignore)
-    await car.connect(controller)
+    car = Car(id, serial_port, ignore, "/dev/i2c-7")
+    await car.connect_websocket(controller)
 
     while True:
         time.sleep(1)

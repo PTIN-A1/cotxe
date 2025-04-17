@@ -15,14 +15,9 @@
                     python3
                 ];
 
-                dependencies = with pkgs.python312Packages; [
-                    pyserial
-
-                    certifi
-                    websockets
-                ];
-
                 dev_tools = with pkgs.python312Packages; [
+                    pip
+
                     bandit
                     flake8
 
@@ -33,7 +28,13 @@
 
             in { 
                 devShells.default = pkgs.mkShell {
-                    buildInputs = build_tools ++ dependencies ++ dev_tools;
+                    buildInputs = build_tools ++ dev_tools;
+
+                    shellHook = ''
+                        python -m venv .venv
+                        source .venv/bin/activate
+                        pip install -r requirements.txt
+                    '';
                 };
             }
         );
