@@ -1,4 +1,4 @@
-__version__ = "0.1.0"
+__version__ = "0.1.2"
 
 import asyncio
 import logging
@@ -7,7 +7,7 @@ import time
 
 from car import Car
 
-logging.getLogger().setLevel(level=os.getenv("LOG_LEVEL", "INFO").upper())
+logging.getLogger().setLevel(level=os.getenv("CAR_LOG_LEVEL", "INFO").upper())
 
 
 async def main():

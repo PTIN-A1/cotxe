@@ -52,6 +52,8 @@ class Car(Esp32, Powertrain):
                 await websocket.send(json.dumps({"location": location}))
                 log.debug("Location sent.")
 
+                await asyncio.sleep(0.5)  # Yield the websocket to other tasks
+
             except Exception as e:
                 log.error(f"Failed to send location to websocket: {e}")
 
