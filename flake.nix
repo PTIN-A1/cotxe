@@ -25,6 +25,34 @@
                     python-lsp-ruff
                     autopep8
                 ];
+                
+                native_package_build = pkgs.python312Packages.buildPythonPackage {
+                    pname = "cotxe-virtual";
+                    version = "0.3.0";
+
+                    src = pkgs.lib.cleanSourceWith {
+                      src = ./.;
+
+                      filter = let
+                        ignoreList = [ "docker-compose.yml" "src/hola-mon" "src/pseudocontroller.py" ]; # Elements ignorats
+                      in
+                        path: type: !(pkgs.lib.elem (baseNameOf path) ignoreList);
+                    };
+
+                    propagatedBuildInputs = dependencies;
+                };
+
+                docker_image_build = pkgs.dockerTools.buildImage {
+                    name = "cotxe-virtual";
+                    tag = "0.3.0";
+
+                    contents = [ native_package_build pkgs.coreutils pkgs.busybox ];
+
+                    config = {
+                        Cmd = [ "${native_package_build}/bin/cotxe-virtual" ];
+                        Env = [ "PYTHONUNBUFFERED=1" ]; # Sense buffer, per tant els missatges s'imprimiran per la sortida estàndard cada vegada que s'executi un print
+                    };
+                };
 
             in { 
                 devShells.default = pkgs.mkShell {
