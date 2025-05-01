@@ -39,7 +39,7 @@
                         path: type: !(pkgs.lib.elem (baseNameOf path) ignoreList);
                     };
 
-                    propagatedBuildInputs = dependencies;
+                    # propagatedBuildInputs = dependencies;
                 };
 
                 docker_image_build = pkgs.dockerTools.buildImage {
@@ -50,11 +50,18 @@
 
                     config = {
                         Cmd = [ "${native_package_build}/bin/cotxe-virtual" ];
-                        Env = [ "PYTHONUNBUFFERED=1" ]; # Sense buffer, per tant els missatges s'imprimiran per la sortida estàndard cada vegada que s'executi un print
-                    };
+                        Env = [ "PYTHONUNBUFFERED=1" 
+                                "CAR_TYPE=virtual"
+                        ]; # PYTHONBUFFERED=1 -> Sense buffer, per tant els missatges s'imprimiran per la sortida estàndard cada vegada que s'executi un print
+                    }; # CAR_TYPE -> pot ser "virtual" o "physical"
                 };
 
             in { 
+                packages = {
+                    default = native_package_build;
+                    docker = docker_image_build;
+                };
+                
                 devShells.default = pkgs.mkShell {
                     buildInputs = build_tools ++ dev_tools;
 

@@ -16,9 +16,16 @@ async def main():
     ignore = [
         ap.strip() for ap in os.getenv("CAR_AP_IGNORE", "").split(",") if ap.strip()
     ]
-    controller = os.getenv("CAR_CONTROLLER", "wss://localhost:8000")
+    # canviar wss per ws quan no es vulgui fer servir SSL
+    controller = os.getenv("CAR_CONTROLLER", "ws://localhost:8000")
 
-    car = Car(id, serial_port, ignore, "/dev/i2c-7")
+    car_type = os.getenv("CAR_TYPE", "virtual")
+
+    print(f"Sóc {car_type}")
+
+    use_ssl = False
+
+    car = Car(id, serial_port, ignore, "/dev/i2c-7", car_type, use_ssl)
     await car.connect_websocket(controller)
 
     while True:
