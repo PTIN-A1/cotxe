@@ -2,6 +2,8 @@ import asyncio
 import json
 import logging as log
 import ssl
+import sys
+
 from ssl import SSLContext
 from uuid import UUID
 
@@ -26,7 +28,8 @@ class Car(Esp32):
         print(f"Sóc {self.car_type}")
             
         self.use_ssl = use_ssl
-
+        self.shutdown = 0
+        
         if use_ssl:
             self.ssl_context = SSLContext(ssl.PROTOCOL_TLS_CLIENT)
             self.ssl_context.minimum_version = ssl.TLSVersion.TLSv1_2
@@ -49,16 +52,34 @@ class Car(Esp32):
     async def connect_websocket(self, controller: str):
         log.info(f"Connecting websocket to {controller}...")
         print(f"use_ssl és {self.use_ssl}")
-        async with websockets.connect(controller) as websocket:
-            # Si es vol fer servir SSL, afegir el següent just entre "controller" i ")" -> , ssl=self.ssl_context if self.use_ssl else None
-            log.info("Connected.")
-            asyncio.create_task(self.send_location(websocket))
-            asyncio.create_task(self.recieve_commands(websocket))
+        send_task = None
+        receive_task = None
+        try:
+            async with websockets.connect(controller) as websocket:
+                # Si es vol fer servir SSL, afegir el següent just entre "controller" i ")" -> , ssl=self.ssl_context if self.use_ssl else None
+                # També s'ha d'afegir una segona 's' al "wss" que apareix a main.py
+                log.info("Connected.")
+                send_task = asyncio.create_task(self.send_location(websocket))
+                receive_task = asyncio.create_task(self.recieve_commands(websocket))
 
-            while True:
-                await asyncio.sleep(1)
+                while True:
+                    await asyncio.sleep(1)
+                    if self.shutdown:
+                        break
+        
+        except websockets.exceptions.ConnectionClosedError:
+            log.error("Websocket connection closed unexpectedly. Shutting down...")
+        
+        except Exception as e:
+            log.error(f"Unexpected error in websocket connection: {e}")
 
-        log.warn("Disconnected from websocket.")
+        finally:
+            if send_task:
+                send_task.cancel()
+            if receive_task:
+                receive_task.cancel()
+            log.warn("Disconnected from websocket.")
+            sys.exit(1)
 
     async def send_location(self, websocket):
         while True:
@@ -83,9 +104,16 @@ class Car(Esp32):
                     log.debug("Location sent.")
 
                 await asyncio.sleep(3)  # Yield the websocket to other tasks
-
+            
+            except websockets.exceptions.ConnectionClosedError:
+                log.error("Websocket disconnected while sending location. Stopping send_location task")
+                self.shutdown = 1
+                break # Finalitzem la tarea sortint del bucle while
+            
             except Exception as e:
                 log.error(f"Failed to send location to websocket: {e}")
+                self.shutdown = 1
+                break
 
     async def recieve_commands(self, websocket):
         while True:
@@ -106,5 +134,11 @@ class Car(Esp32):
                         direction = self.powertrain.Direction.from_str_virtual(recieved["direction"], self.powertrain.orientation)
                     self.powertrain.move(direction)
 
+            except websockets.exceptions.ConnectionClosedError:
+                log.error("Websocket disconnected while receiving commands. Stopping receive_commands task")
+                self.shutdown = 1
+                break # Finalitzem la tarea sortint del bucle while
             except Exception as e:
                 log.error(f"Failed to recieve from websocket: {e}")
+                self.shutdown = 1
+                break
