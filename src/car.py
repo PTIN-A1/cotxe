@@ -66,7 +66,11 @@ class Car(Esp32):
                     await asyncio.sleep(1)
                     if self.shutdown:
                         break
-        
+                    
+        except KeyboardInterrupt:
+            log.warn("Shutting down because KeyboardInterrupt was detected...")
+            self.shutdown = 1
+
         except websockets.exceptions.ConnectionClosedError:
             log.error("Websocket connection closed unexpectedly. Shutting down...")
         
@@ -133,7 +137,12 @@ class Car(Esp32):
                         # self.car_type == "virtual"
                         direction = self.powertrain.Direction.from_str_virtual(recieved["direction"], self.powertrain.orientation)
                     self.powertrain.move(direction)
+                else:
+                    log.warn(f"Unknown movement command received.")
 
+            except KeyboardInterrupt:
+                log.warn("Shutting down because KeyboardInterrupt was detected...")
+                self.shutdown = 1
             except websockets.exceptions.ConnectionClosedError:
                 log.error("Websocket disconnected while receiving commands. Stopping receive_commands task")
                 self.shutdown = 1

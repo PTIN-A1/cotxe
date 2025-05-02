@@ -1,5 +1,5 @@
 {
-    description = "Software pel cotxe físic";
+    description = "Software pel cotxe, tant físic com virtual";
 
     inputs = {
         nixpkgs.url     = "github:NixOS/nixpkgs/nixos-24.11";
@@ -27,7 +27,7 @@
                 ];
                 
                 native_package_build = pkgs.python312Packages.buildPythonPackage {
-                    pname = "cotxe-virtual";
+                    pname = "cotxe-ptin";
                     version = "0.3.0";
 
                     src = pkgs.lib.cleanSourceWith {
@@ -38,18 +38,21 @@
                       in
                         path: type: !(pkgs.lib.elem (baseNameOf path) ignoreList);
                     };
-
-                    # propagatedBuildInputs = dependencies;
+                    propagatedBuildInputs = with pkgs.python312Packages; [
+                        pyserial
+                        certifi
+                        websockets
+                    ];
                 };
 
                 docker_image_build = pkgs.dockerTools.buildImage {
-                    name = "cotxe-virtual";
+                    name = "cotxe-ptin";
                     tag = "0.3.0";
 
                     contents = [ native_package_build pkgs.coreutils pkgs.busybox ];
 
                     config = {
-                        Cmd = [ "${native_package_build}/bin/cotxe-virtual" ];
+                        Cmd = [ "${native_package_build}/bin/cotxe-ptin" ];
                         Env = [ "PYTHONUNBUFFERED=1" 
                                 "CAR_TYPE=virtual"
                         ]; # PYTHONBUFFERED=1 -> Sense buffer, per tant els missatges s'imprimiran per la sortida estàndard cada vegada que s'executi un print

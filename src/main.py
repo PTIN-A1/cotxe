@@ -17,7 +17,7 @@ async def main():
         ap.strip() for ap in os.getenv("CAR_AP_IGNORE", "").split(",") if ap.strip()
     ]
     # canviar wss per ws quan no es vulgui fer servir SSL
-    controller = os.getenv("CAR_CONTROLLER", "ws://localhost:8000")
+    controller = os.getenv("CAR_CONTROLLER", "ws://10.0.2.15:8000")
 
     car_type = os.getenv("CAR_TYPE", "virtual")
 
@@ -31,6 +31,11 @@ async def main():
     while True:
         time.sleep(1)
 
+def run_main():
+    asyncio.run(main())
+    # S'ha d'executar la corutina main amb un bucle d'events, no es pot cridar directament al main
+    # Aquesta funció serà el punt d'entrada de la imatge de Docker (definit a setup.py)
+    # Sense aquesta funció, quan s'executés el docker que conté aquest programa es cridaria directament a main sense asyncio
 
 if __name__ == "__main__":
     asyncio.run(main())
