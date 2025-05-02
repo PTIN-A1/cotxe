@@ -11,9 +11,9 @@ import websockets
 from peripherals.esp32 import Esp32
 from peripherals.powertrain import Powertrain
 from peripherals.location import PhysicalLocation, VirtualLocation
+from peripherals.powertrain import PhysicalPowertrain, VirtualPowertrain
 
-
-class Car(Esp32, Powertrain):
+class Car(Esp32):
     id: UUID
     ssl_context: SSLContext
 
@@ -24,11 +24,7 @@ class Car(Esp32, Powertrain):
         self.id = id
         self.car_type = car_type
         print(f"Sóc {self.car_type}")
-        if self.car_type == "physical":
-            self.location = PhysicalLocation()
-        else:
-            self.location = VirtualLocation()
-
+            
         self.use_ssl = use_ssl
 
         if use_ssl:
@@ -38,11 +34,16 @@ class Car(Esp32, Powertrain):
             self.ssl_context.load_verify_locations(certifi.where())
 
         if self.car_type == "physical":
+            self.location = PhysicalLocation()
             self.connect_serial(serial_port, ignore)
-            self.connect_powertain(motor_interface)
-        else:
-            log.info(f"Positioning and Powertrain configured correctly.")
 
+            self.powertrain = PhysicalPowertrain()
+            self.powertrain.connect_powertrain(motor_interface)
+        else:
+            self.location = VirtualLocation()
+            self.powertrain = VirtualPowertrain()
+        
+        log.info(f"Positioning and Powertrain configured correctly.")
         log.info(f"Car {id} ready.")
 
     async def connect_websocket(self, controller: str):
@@ -69,7 +70,7 @@ class Car(Esp32, Powertrain):
                     await websocket.send(json.dumps({"location": location}))
                     log.debug("Location sent.")
                 else:
-                    # codi virtual
+                    # self.car_type == "virtual"
                     x_actual, y_actual = self.location.get()
                     data = {
                         "coordinates": {
@@ -81,7 +82,7 @@ class Car(Esp32, Powertrain):
                     await websocket.send(json.dumps(data))
                     log.debug("Location sent.")
 
-                await asyncio.sleep(2)  # Yield the websocket to other tasks
+                await asyncio.sleep(3)  # Yield the websocket to other tasks
 
             except Exception as e:
                 log.error(f"Failed to send location to websocket: {e}")
@@ -98,8 +99,12 @@ class Car(Esp32, Powertrain):
 
                 # No match statement in python 3.9!!
                 if recieved["command"] == "move":
-                    direction = self.Direction.from_str(recieved["direction"])
-                    self.move(direction)
+                    if self.car_type == "physical":
+                        direction = self.powertrain.Direction.from_str(recieved["direction"])
+                    else:
+                        # self.car_type == "virtual"
+                        direction = self.powertrain.Direction.from_str_virtual(recieved["direction"], self.powertrain.orientation)
+                    self.powertrain.move(direction)
 
             except Exception as e:
                 log.error(f"Failed to recieve from websocket: {e}")
