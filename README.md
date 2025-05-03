@@ -39,14 +39,14 @@ _Si vols que el cotxe sigui de tipus físic, edita a main.py la línia de "car_t
 ```bash
 docker build -t cotxe-ptin .
 ```
-_Nota: Pots canviar el tipus de cotxe (physical/virtual) editant el fitxer "Dockerfile" i, al costat de "ENV CAR_TYPE=", posant (sense les cometes dobles) "physical" o "virtual"_
+_Nota: Pots canviar el tipus de cotxe (physical/virtual) editant el fitxer "Dockerfile" i, al costat de "ENV CAR_TYPE=", posant (sense les cometes dobles) "physical" o "virtual"._
 
 - Executa el contenidor amb la imatge de Docker
 ```bash
 docker run --rm cotxe-ptin
 ```
 
-_Nota: recorda que, com s'ha esmentat anteriorment, perquè el programa del cotxe funcioni el servidor WebSocket ha d'estar escoltant."_
+_Nota: recorda que, com s'ha esmentat anteriorment, perquè el programa del cotxe funcioni el servidor WebSocket ha d'estar escoltant._
 
 ## Guia d'estil:
 - És necessari formatejar el codi amb autopep8 abans de enviar-lo a origin.
