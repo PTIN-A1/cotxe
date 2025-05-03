@@ -117,7 +117,7 @@ class Car(Esp32):
                 log.error(
                     "Websocket disconnected while sending location. Stopping send_location task")
                 self.shutdown = 1
-                break  # Finalitzem la tarea sortint del bucle while
+                break  # Finalitzem la tasca sortint del bucle while
 
             except Exception as e:
                 log.error(f"Failed to send location to websocket: {e}")

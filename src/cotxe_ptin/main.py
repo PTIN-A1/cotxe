@@ -17,7 +17,8 @@ async def main():
         ap.strip() for ap in os.getenv("CAR_AP_IGNORE", "").split(",") if ap.strip()
     ]
     # canviar wss per ws quan no es vulgui fer servir SSL
-    controller = os.getenv("CAR_CONTROLLER", "ws://10.0.2.15:8000")
+    connexio = "ws://10.0.2.15:8000"
+    controller = os.getenv("CAR_CONTROLLER", connexio)
 
     car_type = os.getenv("CAR_TYPE", "virtual")
 
