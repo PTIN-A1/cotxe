@@ -1,21 +1,22 @@
-# Imagen base
+# Imatge base
 FROM python:3.12-slim
 
-# Establecer el directorio de trabajo
+# Establir directori de treball
 WORKDIR /app
 
-# Copiar los archivos necesarios
+# Copiar fitxers necessaris
 COPY requirements.txt .
 COPY setup.py .
 COPY src/ ./src/
 
-# Instalar las dependencias
+# Instal·lar dependències
 RUN pip install --upgrade pip \
     && pip install -r requirements.txt \
     && pip install .
 
+# Tipus de cotxe (physical/virtual)
 ENV CAR_TYPE=virtual
 
-# Comando por defecto (ajusta según tu paquete y punto de entrada)
+# Punt d'entrada
 CMD ["python", "-m", "cotxe_ptin.main"]
 

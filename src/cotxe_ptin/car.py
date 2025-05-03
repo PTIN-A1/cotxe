@@ -14,6 +14,7 @@ from .peripherals.esp32 import Esp32
 from .peripherals.location import PhysicalLocation, VirtualLocation
 from .peripherals.powertrain import PhysicalPowertrain, VirtualPowertrain
 
+
 class Car(Esp32):
     id: UUID
     ssl_context: SSLContext
@@ -25,10 +26,10 @@ class Car(Esp32):
         self.id = id
         self.car_type = car_type
         # print(f"Sóc {self.car_type}")
-            
+
         self.use_ssl = use_ssl
         self.shutdown = 0
-        
+
         if use_ssl:
             self.ssl_context = SSLContext(ssl.PROTOCOL_TLS_CLIENT)
             self.ssl_context.minimum_version = ssl.TLSVersion.TLSv1_2
@@ -44,7 +45,7 @@ class Car(Esp32):
         else:
             self.location = VirtualLocation()
             self.powertrain = VirtualPowertrain()
-        
+
         log.info(f"Positioning and Powertrain configured correctly.")
         log.info(f"Car {id} ready.")
 
@@ -59,20 +60,22 @@ class Car(Esp32):
                 # També s'ha d'afegir una segona 's' al "wss" que apareix a main.py
                 log.info("Connected.")
                 send_task = asyncio.create_task(self.send_location(websocket))
-                receive_task = asyncio.create_task(self.recieve_commands(websocket))
+                receive_task = asyncio.create_task(
+                    self.recieve_commands(websocket))
 
                 while True:
                     await asyncio.sleep(1)
                     if self.shutdown:
                         break
-                    
+
         except KeyboardInterrupt:
             log.warn("Shutting down because KeyboardInterrupt was detected...")
             self.shutdown = 1
 
         except websockets.exceptions.ConnectionClosedError:
-            log.error("Websocket connection closed unexpectedly. Shutting down...")
-        
+            log.error(
+                "Websocket connection closed unexpectedly. Shutting down...")
+
         except Exception as e:
             log.error(f"Unexpected error in websocket connection: {e}")
 
@@ -107,12 +110,13 @@ class Car(Esp32):
                     log.debug("Location sent.")
 
                 await asyncio.sleep(3)  # Yield the websocket to other tasks
-            
+
             except websockets.exceptions.ConnectionClosedError:
-                log.error("Websocket disconnected while sending location. Stopping send_location task")
+                log.error(
+                    "Websocket disconnected while sending location. Stopping send_location task")
                 self.shutdown = 1
-                break # Finalitzem la tarea sortint del bucle while
-            
+                break  # Finalitzem la tarea sortint del bucle while
+
             except Exception as e:
                 log.error(f"Failed to send location to websocket: {e}")
                 self.shutdown = 1
@@ -131,10 +135,12 @@ class Car(Esp32):
                 # No match statement in python 3.9!!
                 if recieved["command"] == "move":
                     if self.car_type == "physical":
-                        direction = self.powertrain.Direction.from_str(recieved["direction"])
+                        direction = self.powertrain.Direction.from_str(
+                            recieved["direction"])
                     else:
                         # self.car_type == "virtual"
-                        direction = self.powertrain.Direction.from_str_virtual(recieved["direction"], self.powertrain.orientation)
+                        direction = self.powertrain.Direction.from_str_virtual(
+                            recieved["direction"], self.powertrain.orientation)
                     self.powertrain.move(direction)
                 else:
                     log.warn(f"Unknown movement command received.")
@@ -143,9 +149,10 @@ class Car(Esp32):
                 log.warn("Shutting down because KeyboardInterrupt was detected...")
                 self.shutdown = 1
             except websockets.exceptions.ConnectionClosedError:
-                log.error("Websocket disconnected while receiving commands. Stopping receive_commands task")
+                log.error(
+                    "Websocket disconnected while receiving commands. Stopping receive_commands task")
                 self.shutdown = 1
-                break # Finalitzem la tarea sortint del bucle while
+                break  # Finalitzem la tarea sortint del bucle while
             except Exception as e:
                 log.error(f"Failed to recieve from websocket: {e}")
                 self.shutdown = 1

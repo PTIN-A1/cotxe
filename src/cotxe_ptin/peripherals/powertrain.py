@@ -5,6 +5,7 @@ from typing import Tuple
 from PCA9685_smbus2 import PCA9685
 from .location import VirtualLocation
 
+
 class Powertrain:
     class Direction(Enum):
         Forward = (2000, 2000, 2000, 2000)
@@ -61,7 +62,8 @@ class Powertrain:
                 return gir[(gir.index(orientation) + 1) % 4]
             else:
                 log.warn("Stopping car due to unknown direction")
-                return (0,0)
+                return (0, 0)
+
 
 class PhysicalPowertrain(Powertrain):
     # pwm: PCA9685
@@ -101,14 +103,16 @@ class PhysicalPowertrain(Powertrain):
         self.set_motor(self.Motor.BottomRight, direction)
         self.set_motor(self.Motor.BottomLeft, direction)
 
+
 class VirtualPowertrain(Powertrain):
     orientation: str = "north"
-    
+
     def move(self, direction):
         # direction pot ser una tupla de dos enters (si es fa forward o back) o un string (si es fa left o right)
-        
+
         if isinstance(direction, tuple) and len(direction) == 2 and all(isinstance(i, int) for i in direction):
-            log.debug(f"Moving vehicle adding {direction} to current coordinates")
+            log.debug(
+                f"Moving vehicle adding {direction} to current coordinates")
             x_movement, y_movement = direction
             x_actual, y_actual = VirtualLocation.get()
             VirtualLocation.set(x_actual+x_movement, y_actual+y_movement)

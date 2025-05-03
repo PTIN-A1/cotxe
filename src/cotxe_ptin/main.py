@@ -31,11 +31,13 @@ async def main():
     while True:
         time.sleep(1)
 
+"""
 def run_main():
     asyncio.run(main())
     # S'ha d'executar la corutina main amb un bucle d'events, no es pot cridar directament al main
     # Aquesta funció serà el punt d'entrada de la imatge de Docker (definit a setup.py)
     # Sense aquesta funció, quan s'executés el docker que conté aquest programa es cridaria directament a main sense asyncio
+"""
 
 if __name__ == "__main__":
     asyncio.run(main())
