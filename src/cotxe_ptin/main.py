@@ -5,7 +5,7 @@ import logging
 import os
 import time
 
-from car import Car
+from .car import Car
 
 logging.getLogger().setLevel(level=os.getenv("CAR_LOG_LEVEL", "INFO").upper())
 
@@ -21,7 +21,7 @@ async def main():
 
     car_type = os.getenv("CAR_TYPE", "virtual")
 
-    print(f"Sóc {car_type}")
+    # print(f"Sóc {car_type}")
 
     use_ssl = False
 

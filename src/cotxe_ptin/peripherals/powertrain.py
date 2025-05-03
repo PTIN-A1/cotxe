@@ -2,8 +2,8 @@ from enum import Enum
 import logging as log
 from typing import Tuple
 
-# from PCA9685_smbus2 import PCA9685
-from peripherals.location import VirtualLocation
+from PCA9685_smbus2 import PCA9685
+from .location import VirtualLocation
 
 class Powertrain:
     class Direction(Enum):
@@ -71,7 +71,7 @@ class PhysicalPowertrain(Powertrain):
         TopRight = (1, 6, 7)
         BottomLeft = (2, 3, 2)
         BottomRight = (3, 4, 5)
-"""
+
     def connect_powertain(self, interface: str):
         log.info(f"Connecting to powertrain on interface {interface}...")
         self.pwm = PCA9685.PCA9685(interface=interface)
@@ -100,7 +100,7 @@ class PhysicalPowertrain(Powertrain):
         self.set_motor(self.Motor.TopRight, direction)
         self.set_motor(self.Motor.BottomRight, direction)
         self.set_motor(self.Motor.BottomLeft, direction)
-"""
+
 class VirtualPowertrain(Powertrain):
     orientation: str = "north"
     

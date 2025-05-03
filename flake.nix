@@ -30,14 +30,8 @@
                     pname = "cotxe-ptin";
                     version = "0.3.0";
 
-                    src = pkgs.lib.cleanSourceWith {
-                      src = ./.;
-
-                      filter = let
-                        ignoreList = [ "docker-compose.yml" "src/hola-mon" "src/pseudocontroller.py" ]; # Elements ignorats
-                      in
-                        path: type: !(pkgs.lib.elem (baseNameOf path) ignoreList);
-                    };
+                    src = pkgs.lib.cleanSource ./.;
+                    
                     propagatedBuildInputs = with pkgs.python312Packages; [
                         pyserial
                         certifi

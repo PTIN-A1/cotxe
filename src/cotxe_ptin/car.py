@@ -10,10 +10,9 @@ from uuid import UUID
 import certifi
 import websockets
 
-from peripherals.esp32 import Esp32
-from peripherals.powertrain import Powertrain
-from peripherals.location import PhysicalLocation, VirtualLocation
-from peripherals.powertrain import PhysicalPowertrain, VirtualPowertrain
+from .peripherals.esp32 import Esp32
+from .peripherals.location import PhysicalLocation, VirtualLocation
+from .peripherals.powertrain import PhysicalPowertrain, VirtualPowertrain
 
 class Car(Esp32):
     id: UUID
@@ -25,7 +24,7 @@ class Car(Esp32):
         log.info(f"Creating new Car instance with ID {id}.")
         self.id = id
         self.car_type = car_type
-        print(f"Sóc {self.car_type}")
+        # print(f"Sóc {self.car_type}")
             
         self.use_ssl = use_ssl
         self.shutdown = 0
@@ -51,7 +50,7 @@ class Car(Esp32):
 
     async def connect_websocket(self, controller: str):
         log.info(f"Connecting websocket to {controller}...")
-        print(f"use_ssl és {self.use_ssl}")
+        # print(f"use_ssl és {self.use_ssl}")
         send_task = None
         receive_task = None
         try:
