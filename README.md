@@ -16,6 +16,9 @@
 
 ## Setup (general):
 
+- Instal·la el gestor de paquets Nix al teu sistema. [**[Instruccions »]**](https://nixos.org/download/)
+- Instal·la Docker CE al teu sistema. [**[Instruccions »]**](https://gist.github.com/Jan-UPC/18d222114a820700c1ab9fb5485fc4a4)
+
 - Entra a l'entorn de desenvolupament per tenir totes les dependències instal·lades:
 ```bash
 nix develop --experimental-features 'nix-command flakes'
