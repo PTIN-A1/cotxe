@@ -99,17 +99,19 @@ class Car(Esp32):
                 else:
                     # self.car_type == "virtual"
                     x_actual, y_actual = self.location.get()
+                    orientacio_actual = self.powertrain.get_orientation()
                     data = {
                         "coordinates": {
                             "x": x_actual,
-                            "y": y_actual
+                            "y": y_actual,
+                            "orientation": orientacio_actual
                         }
                     }
                     log.debug("Sending location to websocket...")
                     await websocket.send(json.dumps(data))
                     log.debug("Location sent.")
 
-                await asyncio.sleep(3)  # Yield the websocket to other tasks
+                await asyncio.sleep(0.5)  # Yield the websocket to other tasks
 
             except websockets.exceptions.ConnectionClosedError:
                 log.error(
