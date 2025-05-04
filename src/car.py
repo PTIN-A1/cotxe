@@ -8,11 +8,12 @@ from uuid import UUID
 import certifi
 import websockets
 
-from peripherals.esp32 import Esp32
-from peripherals.powertrain import Powertrain
+from Powertrain.esp32 import Esp32
+from Powertrain.powertrain import Powertrain
+from Distance.ultrasonic import Ultrasonic
 
 
-class Car(Esp32, Powertrain):
+class Car(Esp32, Powertrain, Ultrasonic):
     id: UUID
     ssl_context: SSLContext
 
@@ -74,3 +75,34 @@ class Car(Esp32, Powertrain):
 
             except Exception as e:
                 log.error(f"Failed to recieve from websocket: {e}")
+
+    async def monitor_and_stop(self):
+        while True:
+            distance = self.get_distance()
+            if distance is not None and distance < 40.0:
+                print(f"[Seguretat] Obstacle a {distance} cm! Aturant motors.")
+                self.move(direction="Stop")
+            await asyncio.sleep(0.2)
+
+    async def obstacle_avoidance_loop(self):
+        while True:
+            distance = self.distance_sensor.measure()
+            if distance is not None and distance < 40.0:
+                print(f"[Obstacle] Detectat a {distance} cm! Aturant motors.")
+                self.move(direction="Stop")
+                await asyncio.sleep(0.5)
+
+                # Comencem a girar fins trobar camí lliure
+                print("[Obstacle] Començant gir a la dreta...")
+                self.move(direction="Right")
+
+                while True:
+                    distance = self.get_distance()
+                    if distance is not None and distance >= 40.0:
+                        print(f"[Obstacle] Camí lliure ({distance} cm). Reprenent avanç.")
+                        break
+                    await asyncio.sleep(0.2)
+
+                self.move(direction="Forward")
+
+            await asyncio.sleep(0.2)
