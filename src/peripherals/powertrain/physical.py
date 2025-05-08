@@ -3,32 +3,11 @@ import logging as log
 
 from PCA9685_smbus2 import PCA9685
 
+from powertrain import Powertrain
 
-class Powertrain:
+
+class PhysicalPowertrain(Powertrain):
     pwm: PCA9685
-
-    class Direction(Enum):
-        Forward = (2000, 2000, 2000, 2000)
-        Back = (-2000, -2000, -2000, -2000)
-        Left = (-2000, 2000, -2000, 2000)
-        Right = (2000, -2000, 2000, -2000)
-        Stop = (0, 0, 0, 0)
-
-        @staticmethod
-        def from_str(direction: str):
-            direction = direction.lower()
-
-            # No match statement in python 3.9!!
-            if direction == "forward":
-                return Powertrain.Direction.Forward
-            elif direction == "back":
-                return Powertrain.Direction.Back
-            elif direction == "left":
-                return Powertrain.Direction.Left
-            elif direction == "right":
-                return Powertrain.Direction.Right
-            else:
-                return Powertrain.Direction.Stop
 
     class Motor(Enum):
         TopLeft = (0, 0, 1)
@@ -42,7 +21,7 @@ class Powertrain:
         self.pwm.set_pwm_freq(50)
         log.info("Successfully connected to and configured the powertrain.")
 
-    def set_motor(self, motor: Motor, direction: Direction):
+    def set_motor(self, motor: Motor, direction: Powertrain.Direction):
         (index, channel_a, channel_b) = motor.value
         duty = direction.value[index]
 
@@ -58,7 +37,7 @@ class Powertrain:
             self.pwm.set_pwm(channel_a, 0, 4095)
             self.pwm.set_pwm(channel_b, 0, 4095)
 
-    def move(self, direction: Direction):
+    def move(self, direction: Powertrain.Direction):
         log.debug(f"Moving motors in direction {direction}")
         self.set_motor(self.Motor.TopLeft, direction)
         self.set_motor(self.Motor.TopRight, direction)

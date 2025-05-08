@@ -3,22 +3,23 @@ import json
 import logging as log
 import ssl
 from ssl import SSLContext
-from uuid import UUID
 
 import certifi
 import websockets
 
-from Powertrain.esp32 import Esp32
-from Powertrain.powertrain import Powertrain
-from Distance.ultrasonic import Ultrasonic
+from peripherals.distance import Distance
+from peripherals.powertrain import Powertrain, build
 
 
-class Car(Esp32, Powertrain, Ultrasonic):
-    id: UUID
+class Car:
+    id: str
     ssl_context: SSLContext
 
+    distance: Distance
+    # powertrain: Powertrain
+
     def __init__(
-        self, id: UUID, serial_port: str, ignore: list[str], motor_interface: str
+        self, id: str, serial_port: str, ignore: list[str], motor_interface: str
     ):
         log.info(f"Creating new Car instance with ID {id}.")
         self.id = id
@@ -28,8 +29,10 @@ class Car(Esp32, Powertrain, Ultrasonic):
         self.ssl_context.maximum_version = ssl.TLSVersion.TLSv1_3
         self.ssl_context.load_verify_locations(certifi.where())
 
-        self.connect_serial(serial_port, ignore)
-        self.connect_powertain(motor_interface)
+        self.distance = build.to_subclass()
+
+        # self.connect_serial(serial_port, ignore)
+        # self.connect_powertain(motor_interface)
         log.info(f"Car {id} ready.")
 
     async def connect_websocket(self, controller: str):
@@ -37,26 +40,26 @@ class Car(Esp32, Powertrain, Ultrasonic):
         async with websockets.connect(controller, ssl=self.ssl_context) as websocket:
             log.info("Connected.")
             asyncio.create_task(self.send_location(websocket))
-            asyncio.create_task(self.recieve_commands(websocket))
+            # asyncio.create_task(self.recieve_commands(websocket))
 
             while True:
                 await asyncio.sleep(1)
 
         log.warn("Disconnected from websocket.")
 
-    async def send_location(self, websocket):
-        while True:
-            try:
-                location = await self.get_ap_rssis()
-
-                log.debug("Sending location to websocket...")
-                await websocket.send(json.dumps({"location": location}))
-                log.debug("Location sent.")
-
-                await asyncio.sleep(0.5)  # Yield the websocket to other tasks
-
-            except Exception as e:
-                log.error(f"Failed to send location to websocket: {e}")
+    # async def send_location(self, websocket):
+    #     while True:
+    #         try:
+    #             location = await self.get_ap_rssis()
+    #
+    #             log.debug("Sending location to websocket...")
+    #             await websocket.send(json.dumps({"location": location}))
+    #             log.debug("Location sent.")
+    #
+    #             await asyncio.sleep(0.5)  # Yield the websocket to other tasks
+    #
+    #         except Exception as e:
+    #             log.error(f"Failed to send location to websocket: {e}")
 
     async def recieve_commands(self, websocket):
         while True:
@@ -80,29 +83,31 @@ class Car(Esp32, Powertrain, Ultrasonic):
         while True:
             distance = self.get_distance()
             if distance is not None and distance < 40.0:
-                print(f"[Seguretat] Obstacle a {distance} cm! Aturant motors.")
+                log.debug(f"Obstacle a {distance} cm! Aturant motors.")
                 self.move(direction="Stop")
             await asyncio.sleep(0.2)
 
-    async def obstacle_avoidance_loop(self):
-        while True:
-            distance = self.distance_sensor.measure()
-            if distance is not None and distance < 40.0:
-                print(f"[Obstacle] Detectat a {distance} cm! Aturant motors.")
-                self.move(direction="Stop")
-                await asyncio.sleep(0.5)
-
-                # Comencem a girar fins trobar camí lliure
-                print("[Obstacle] Començant gir a la dreta...")
-                self.move(direction="Right")
-
-                while True:
-                    distance = self.get_distance()
-                    if distance is not None and distance >= 40.0:
-                        print(f"[Obstacle] Camí lliure ({distance} cm). Reprenent avanç.")
-                        break
-                    await asyncio.sleep(0.2)
-
-                self.move(direction="Forward")
-
+    # async def obstacle_avoidance_loop(self):
+    #     while True:
+    #         distance = self.distance_sensor.measure()
+    #         if distance is not None and distance < 40.0:
+    #             log.debug(f"Obstacle detectat a {distance} cm! Aturant motors.")
+    #             self.move(direction="Stop")
+    #             await asyncio.sleep(0.5)
+    #
+    #             # Comencem a girar fins trobar camí lliure
+    #             log.debug("Començant gir a la dreta...")
+    #             self.move(direction="Right")
+    #
+    #             while True:
+    #                 distance = self.get_distance()
+    #                 if distance is not None and distance >= 40.0:
+    #                     log.debug(
+    #                         f"[Obstacle] Camí lliure ({distance} cm). Reprenent avanç."
+    #                     )
+    #                     break
+    #                 await asyncio.sleep(0.2)
+    #
+    #             self.move(direction="Forward")
+    #             self.move(direction="Forward")
             await asyncio.sleep(0.2)
