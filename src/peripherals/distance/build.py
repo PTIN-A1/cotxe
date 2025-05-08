@@ -7,7 +7,7 @@ from peripherals.distance.virtual import VirtualDistance
 ENVIRONMENT = os.getenv("ENVIRONMENT", "physical")
 
 
-def to_subclass() -> Distance:
+def build_distance() -> Distance:
     if ENVIRONMENT == "physical":
         return Ultrasonic()
     else:

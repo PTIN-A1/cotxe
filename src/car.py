@@ -8,7 +8,7 @@ import certifi
 import websockets
 
 from peripherals.distance.distance import Distance
-from peripherals.distance.build import to_subclass
+from peripherals.distance.build import build_distance
 from peripherals.powertrain.powertrain import Powertrain
 
 
@@ -20,7 +20,8 @@ class Car:
     # powertrain: Powertrain
 
     def __init__(
-        self, id: str, serial_port: str, ignore: list[str], motor_interface: str
+        self,
+        id: str,
     ):
         log.info(f"Creating new Car instance with ID {id}.")
         self.id = id
@@ -30,10 +31,8 @@ class Car:
         self.ssl_context.maximum_version = ssl.TLSVersion.TLSv1_3
         self.ssl_context.load_verify_locations(certifi.where())
 
-        self.distance = to_subclass()
+        self.distance = build_distance()
 
-        # self.connect_serial(serial_port, ignore)
-        # self.connect_powertain(motor_interface)
         log.info(f"Car {id} ready.")
 
     async def connect_websocket(self, controller: str):
@@ -88,27 +87,27 @@ class Car:
                 self.move(direction="Stop")
             await asyncio.sleep(0.2)
 
-    # async def obstacle_avoidance_loop(self):
-    #     while True:
-    #         distance = self.distance_sensor.measure()
-    #         if distance is not None and distance < 40.0:
-    #             log.debug(f"Obstacle detectat a {distance} cm! Aturant motors.")
-    #             self.move(direction="Stop")
-    #             await asyncio.sleep(0.5)
-    #
-    #             # Comencem a girar fins trobar camí lliure
-    #             log.debug("Començant gir a la dreta...")
-    #             self.move(direction="Right")
-    #
-    #             while True:
-    #                 distance = self.get_distance()
-    #                 if distance is not None and distance >= 40.0:
-    #                     log.debug(
-    #                         f"[Obstacle] Camí lliure ({distance} cm). Reprenent avanç."
-    #                     )
-    #                     break
-    #                 await asyncio.sleep(0.2)
-    #
-    #             self.move(direction="Forward")
-    #             self.move(direction="Forward")
+            # async def obstacle_avoidance_loop(self):
+            #     while True:
+            #         distance = self.distance_sensor.measure()
+            #         if distance is not None and distance < 40.0:
+            #             log.debug(f"Obstacle detectat a {distance} cm! Aturant motors.")
+            #             self.move(direction="Stop")
+            #             await asyncio.sleep(0.5)
+            #
+            #             # Comencem a girar fins trobar camí lliure
+            #             log.debug("Començant gir a la dreta...")
+            #             self.move(direction="Right")
+            #
+            #             while True:
+            #                 distance = self.get_distance()
+            #                 if distance is not None and distance >= 40.0:
+            #                     log.debug(
+            #                         f"[Obstacle] Camí lliure ({distance} cm). Reprenent avanç."
+            #                     )
+            #                     break
+            #                 await asyncio.sleep(0.2)
+            #
+            #             self.move(direction="Forward")
+            #             self.move(direction="Forward")
             await asyncio.sleep(0.2)

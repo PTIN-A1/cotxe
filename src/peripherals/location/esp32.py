@@ -35,8 +35,7 @@ class Esp32:
 
             if not recieving:
                 if line.startswith(self.MEASUREMENT_START):
-                    log.debug(
-                        "Recieving a new AP measurement from the serial port.")
+                    log.debug("Recieving a new AP measurement from the serial port.")
                     recieving = True
 
                 continue
