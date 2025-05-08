@@ -7,8 +7,9 @@ from ssl import SSLContext
 import certifi
 import websockets
 
-from peripherals.distance import Distance
-from peripherals.powertrain import Powertrain, build
+from peripherals.distance.distance import Distance
+from peripherals.distance.build import to_subclass
+from peripherals.powertrain.powertrain import Powertrain
 
 
 class Car:
@@ -29,7 +30,7 @@ class Car:
         self.ssl_context.maximum_version = ssl.TLSVersion.TLSv1_3
         self.ssl_context.load_verify_locations(certifi.where())
 
-        self.distance = build.to_subclass()
+        self.distance = to_subclass()
 
         # self.connect_serial(serial_port, ignore)
         # self.connect_powertain(motor_interface)

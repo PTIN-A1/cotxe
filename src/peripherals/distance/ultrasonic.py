@@ -3,12 +3,12 @@ import time
 
 from gpiozero import DistanceSensor, PWMSoftwareFallback, DistanceSensorNoEcho
 
-from distance import Distance
+from peripherals.distance.distance import Distance
 
 
 class Ultrasonic(Distance):
     def __init__(
-        self, trigger_pin: int = 27, echo_pin: int = 22, max_distance: float = 3.0
+        self, trigger_pin: int = 154, echo_pin: int = 156, max_distance: float = 3.0
     ):
         warnings.filterwarnings("ignore", category=DistanceSensorNoEcho)
         warnings.filterwarnings("ignore", category=PWMSoftwareFallback)

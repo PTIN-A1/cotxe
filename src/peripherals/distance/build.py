@@ -1,8 +1,8 @@
 import os
 
-from distance import Distance
-from ultrasonic import Ultrasonic
-from virtual import VirtualDistance
+from peripherals.distance.distance import Distance
+from peripherals.distance.ultrasonic import Ultrasonic
+from peripherals.distance.virtual import VirtualDistance
 
 ENVIRONMENT = os.getenv("ENVIRONMENT", "physical")
 
