@@ -1,5 +1,6 @@
 from enum import Enum
 
+
 class Powertrain():
     class Direction(Enum):
         Forward = (-2000, -2000, -2000, -2000)
@@ -7,7 +8,7 @@ class Powertrain():
         Left = (-2000, 2000, -2000, 2000)
         Right = (2000, -2000, 2000, -2000)
         Stop = (0, 0, 0, 0)
-        
+
     def from_str_virtual(direction: str, orientation: str):
         if direction == "forward":
             if orientation == "north":
@@ -36,7 +37,7 @@ class Powertrain():
         elif direction == "right":
             gir = ["north", "east", "south", "west"]
             return gir[(gir.index(orientation) + 1) % 4]
-            
+
         else:
             log.warn("Stopping car due to unknown direction")
             return (0, 0)

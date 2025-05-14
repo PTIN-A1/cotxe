@@ -5,6 +5,7 @@ from PCA9685_smbus2 import PCA9685
 
 from peripherals.powertrain.powertrain import Powertrain
 
+
 class PhysicalPowertrain(Powertrain):
     pwm: PCA9685
 

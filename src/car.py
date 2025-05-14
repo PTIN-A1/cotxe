@@ -1,7 +1,7 @@
 import asyncio
 import json
 import logging as log
-import requests # temporal, només per fer proves
+import requests  # temporal, només per fer proves
 import ssl
 from ssl import SSLContext
 
@@ -55,20 +55,20 @@ class Car:
         log.warn("Disconnected from websocket.")
 
     async def send_location(self, websocket):
-         while True:
-             try:
-                 # car_location = await self.get_ap_rssis()
-    
-                 log.debug("Sending location to websocket...")
-                 # await websocket.send(json.dumps({"location": car_location}))
-                 log.debug("Location sent.")
-                 x, y = self.location.get()
-                 print(f"Ubicació actual: {x} {y}")
-                 
-                 await asyncio.sleep(1)  # Yield the websocket to other tasks
-    
-             except Exception as e:
-                 log.error(f"Failed to send location to websocket: {e}")
+        while True:
+            try:
+                # car_location = await self.get_ap_rssis()
+
+                log.debug("Sending location to websocket...")
+                # await websocket.send(json.dumps({"location": car_location}))
+                log.debug("Location sent.")
+                x, y = self.location.get()
+                print(f"Ubicació actual: {x} {y}")
+
+                await asyncio.sleep(1)  # Yield the websocket to other tasks
+
+            except Exception as e:
+                log.error(f"Failed to send location to websocket: {e}")
 
     async def recieve_commands(self, websocket):
         final = 0
@@ -87,7 +87,7 @@ class Car:
                 #    self.move(direction)
                 if final == 1:
                     break
-                
+
                 url = "http://127.0.0.1:8000/path"
                 data = {
                     "start": [0.5015634772, 0.3986866792],
@@ -109,7 +109,7 @@ class Car:
 
                 x, y = self.location.get()
                 print(f"Ubicació actual: {x} {y}")
-                 
+
             except Exception as e:
                 log.error(f"Failed to recieve from websocket: {e}")
 
