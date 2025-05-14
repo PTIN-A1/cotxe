@@ -97,12 +97,12 @@ class Car:
                 respuesta = requests.post(url, json=data)
                 ruta = respuesta.json()
                 if "path" in ruta:
-                    print("Ruta encontrada, recorriendo...")
+                    print("Ruta trobada, comencem...")
                     for punto in ruta["path"]:
                         x, y = punto
-                        # print(f"Moviendo a ({x}, {y})")
+                        # print(f"Anant a ({x}, {y})")
                         self.powertrain.move(punto)
-                        await asyncio.sleep(1)  # Simula el tiempo de desplazamiento
+                        await asyncio.sleep(1)  # Emular temps de desplaçament
                     final = 1
                 else:
                     print("Ruta no trobada")
