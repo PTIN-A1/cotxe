@@ -1,6 +1,7 @@
 class Location:
-    x: float = 0.0
-    y: float = 0.0
+    x: float = 0.5015634772
+    y: float = 0.3986866792
 
-    def get(self) -> [float, float]:
-        return self.x, self.y
+    @classmethod
+    def get(cls) -> [float, float]:
+        return cls.x, cls.y

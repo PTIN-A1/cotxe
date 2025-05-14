@@ -4,7 +4,7 @@ from peripherals.location.location import Location
 from peripherals.location.virtual import VirtualLocation
 from peripherals.location.physical import PhysicalLocation
 
-ENVIRONMENT = os.getenv("ENVIRONMENT", "physical")
+ENVIRONMENT = os.getenv("ENVIRONMENT", "virtual")
 
 
 def build_location() -> Location:
