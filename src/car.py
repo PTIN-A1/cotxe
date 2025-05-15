@@ -63,7 +63,7 @@ class Car:
                 # await websocket.send(json.dumps({"location": car_location}))
                 log.debug("Location sent.")
                 x, y = self.location.get()
-                print(f"Ubicació actual: {x} {y}")
+                # print(f"Ubicació actual: {x} {y}")
 
                 await asyncio.sleep(1)  # Yield the websocket to other tasks
 
@@ -94,16 +94,17 @@ class Car:
                     "goal": [0.5109443402, 0.3367729831]
                 }
 
+                self.powertrain.change_status("Moving")
                 respuesta = requests.post(url, json=data)
-                ruta = respuesta.json()
-                if "path" in ruta:
+                route = respuesta.json()
+                if "path" in route:
                     print("Ruta trobada, comencem...")
-                    for punto in ruta["path"]:
-                        x, y = punto
-                        # print(f"Anant a ({x}, {y})")
-                        self.powertrain.move(punto)
+                    for waypoint in route["path"]:
+                        x, y = waypoint
+                        self.powertrain.move(waypoint)
                         await asyncio.sleep(1)  # Emular temps de desplaçament
                     final = 1
+                    self.powertrain.change_status("Available")
                 else:
                     print("Ruta no trobada")
 
