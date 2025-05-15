@@ -1,5 +1,4 @@
-from peripherals.location.location import Location
-
+from .location import Location
 
 class VirtualLocation(Location):
     @classmethod

@@ -8,12 +8,12 @@ from ssl import SSLContext
 import certifi
 import websockets
 
-from peripherals.location.location import Location
-from peripherals.location.build import build_location
-from peripherals.distance.distance import Distance
-from peripherals.distance.build import build_distance
-from peripherals.powertrain.powertrain import Powertrain
-from peripherals.powertrain.build import build_powertrain
+from .peripherals.location.location import Location
+from .peripherals.location.build import build_location
+from .peripherals.distance.distance import Distance
+from .peripherals.distance.build import build_distance
+from .peripherals.powertrain.powertrain import Powertrain
+from .peripherals.powertrain.build import build_powertrain
 
 
 class Car:
@@ -88,7 +88,7 @@ class Car:
                 if final == 1:
                     break
 
-                url = "http://127.0.0.1:8000/path"
+                url = "http://10.0.2.15:8000/path"
                 data = {
                     "start": [0.5015634772, 0.3986866792],
                     "goal": [0.5109443402, 0.3367729831]

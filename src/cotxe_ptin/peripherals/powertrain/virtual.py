@@ -4,8 +4,8 @@ from enum import Enum
 import logging as log
 from typing import Tuple
 
-from peripherals.powertrain.powertrain import Powertrain
-from peripherals.location.virtual import VirtualLocation
+from .powertrain import Powertrain
+from ..location.virtual import VirtualLocation
 
 
 class VirtualPowertrain(Powertrain):

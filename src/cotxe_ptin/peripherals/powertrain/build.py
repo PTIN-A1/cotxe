@@ -1,8 +1,8 @@
 import os
 
-from peripherals.powertrain.powertrain import Powertrain
-from peripherals.powertrain.physical import PhysicalPowertrain
-from peripherals.powertrain.virtual import VirtualPowertrain
+from .powertrain import Powertrain
+from .physical import PhysicalPowertrain
+from .virtual import VirtualPowertrain
 
 ENVIRONMENT = os.getenv("ENVIRONMENT", "virtual")
 

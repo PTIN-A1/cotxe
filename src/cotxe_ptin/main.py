@@ -5,7 +5,7 @@ import logging
 import os
 import time
 
-from car import Car
+from .car import Car
 
 logging.getLogger().setLevel(level=os.getenv("CAR_LOG_LEVEL", "INFO").upper())
 

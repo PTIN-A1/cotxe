@@ -3,7 +3,7 @@ import time
 
 from gpiozero import DistanceSensor, PWMSoftwareFallback, DistanceSensorNoEcho
 
-from peripherals.distance.distance import Distance
+from .distance import Distance
 
 
 class Ultrasonic(Distance):

@@ -1,8 +1,8 @@
 import os
 
-from peripherals.location.location import Location
-from peripherals.location.virtual import VirtualLocation
-from peripherals.location.physical import PhysicalLocation
+from .location import Location
+from .virtual import VirtualLocation
+from .physical import PhysicalLocation
 
 ENVIRONMENT = os.getenv("ENVIRONMENT", "virtual")
 
