@@ -1,5 +1,6 @@
 from .location import Location
 
+
 class VirtualLocation(Location):
     @classmethod
     def change_location(cls, new_x, new_y):
