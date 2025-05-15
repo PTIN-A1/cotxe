@@ -59,11 +59,18 @@ class Car:
             try:
                 # car_location = await self.get_ap_rssis()
 
+                x_actual, y_actual = self.location.get()
+                orientacio_actual = self.powertrain.get_orientation()
+                data = {
+                    "coordinates": {
+                        "x": x_actual,
+                        "y": y_actual,
+                        "orientation": orientacio_actual
+                    }
+                }
                 log.debug("Sending location to websocket...")
-                # await websocket.send(json.dumps({"location": car_location}))
+                await websocket.send(json.dumps(data))
                 log.debug("Location sent.")
-                x, y = self.location.get()
-                # print(f"Ubicació actual: {x} {y}")
 
                 await asyncio.sleep(1)  # Yield the websocket to other tasks
 
@@ -71,45 +78,48 @@ class Car:
                 log.error(f"Failed to send location to websocket: {e}")
 
     async def recieve_commands(self, websocket):
-        final = 0
+        # final = 0
         while True:
             try:
-                # log.debug("Waiting for a new message from the websocket...")
-                # recieved = await websocket.recv()
-                # log.debug(f"Recieved new message from websocket: {recieved}")
+                log.debug("Waiting for a new message from the websocket...")
+                recieved = await websocket.recv()
+                log.debug(f"Recieved new message from websocket: {recieved}")
 
-                # recieved = json.loads(recieved)
-                # log.debug("Parsed message to json succesfully.")
+                recieved = json.loads(recieved)
+                log.debug("Parsed message to json succesfully.")
 
                 # No match statement in python 3.9!!
                 # if recieved["command"] == "move":
                 #    direction = self.Direction.from_str(recieved["direction"])
                 #    self.move(direction)
-                if final == 1:
-                    break
+                
+                #if final == 1:
+                #    break
 
-                url = "http://10.0.2.15:8000/path"
-                data = {
-                    "start": [0.5015634772, 0.3986866792],
-                    "goal": [0.5109443402, 0.3367729831]
-                }
+                #url = "http://10.0.2.15:8000/path"
+                #data = {
+                #    "start": [0.5015634772, 0.3986866792],
+                #    "goal": [0.5109443402, 0.3367729831]
+                #}
 
-                self.powertrain.change_status("Moving")
-                respuesta = requests.post(url, json=data)
-                route = respuesta.json()
+                
+                # respuesta = requests.post(url, json=data)
+                #route = respuesta.json()
+                route = recieved
                 if "path" in route:
-                    print("Ruta trobada, comencem...")
+                    log.info("Ruta trobada, comencem...")
+                    self.powertrain.change_status("Moving")
                     for waypoint in route["path"]:
                         x, y = waypoint
                         self.powertrain.move(waypoint)
                         await asyncio.sleep(1)  # Emular temps de desplaçament
-                    final = 1
+                    # final = 1
                     self.powertrain.change_status("Available")
                 else:
-                    print("Ruta no trobada")
+                    log.info("Ruta no trobada")
 
                 x, y = self.location.get()
-                print(f"Ubicació actual: {x} {y}")
+                # log.info(f"Ubicació actual: {x} {y}")
 
             except Exception as e:
                 log.error(f"Failed to recieve from websocket: {e}")

@@ -62,8 +62,7 @@ class VirtualPowertrain(Powertrain):
                     self.change_orientation(
                         gir[(gir.index(orientation_actual) + 1) % 4])
                 # Emular temps de gir
-                print(
-                    f"Estic orientat a {orientation_actual} i vull orientar-me a {desired_orientation}")
+                log.info(f"Estic orientat a {orientation_actual} i vull orientar-me a {desired_orientation}")
                 time.sleep(0.5)
 
             # El cotxe ja apunta cap a "desired_orientation", així que ja podem fer que avanci
@@ -76,7 +75,7 @@ class VirtualPowertrain(Powertrain):
                 # self.location.change_location("forward_y", distance)
             self.location.change_location(x_final, y_final)
             x2, y2 = self.location.get()
-            print(f"Estem ara a: {x2} {y2}")
+            # print(f"Estem ara a: {x2} {y2}")
 
     def get_orientation(self):
         return self.orientation
