@@ -17,4 +17,4 @@ class PhysicalLocation(Location):
         self.esp32 = Esp32().connect_serial(serial_port, ignore)
 
     def measure(self):
-        measure = self.esp32.get_ap_rssis()
+        _measure = self.esp32.get_ap_rssis()
