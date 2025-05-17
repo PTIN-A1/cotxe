@@ -3,5 +3,5 @@ class Location:
     y: float = 0.3986866792
 
     @classmethod
-    def get(cls) -> [float, float]:
-        return cls.x, cls.y
+    def get(self) -> [float, float]:
+        return self.x, self.y

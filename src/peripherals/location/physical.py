@@ -1,7 +1,7 @@
 import os
 
-from .location import Location
-from .esp32 import Esp32
+from peripherals.location.location import Location
+from peripherals.location.esp32 import Esp32
 
 
 class PhysicalLocation(Location):
