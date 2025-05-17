@@ -1,4 +1,4 @@
-__version__ = "0.2.0"
+__version__ = "0.2.2"
 
 import asyncio
 import logging
@@ -11,7 +11,7 @@ logging.getLogger().setLevel(level=os.getenv("CAR_LOG_LEVEL", "INFO").upper())
 
 
 async def main():
-    id = os.getenv("CAR_ID", "00000000-0000-0000-0000-000000000000")
+    id = int(os.getenv("CAR_ID", "0x346B9B94"), 16)
     controller = os.getenv("CAR_CONTROLLER", "ws://192.168.10.11:8765")
 
     car = Car(id)

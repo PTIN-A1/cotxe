@@ -11,17 +11,21 @@ from peripherals.location.location import Location
 from peripherals.location.build import build_location
 from peripherals.distance.distance import Distance
 from peripherals.distance.build import build_distance
-from peripherals.powertrain.powertrain import Powertrain
+from peripherals.powertrain.powertrain import Powertrain, State
 from peripherals.powertrain.build import build_powertrain
+
+from logic.navigation import Navigation
 
 
 class Car:
-    id: str
+    id: int
     ssl_context: SSLContext
 
     location: Location
     distance: Distance
     powertrain: Powertrain
+
+    navigation: Navigation
 
     def __init__(
         self,
@@ -39,11 +43,12 @@ class Car:
         self.distance = build_distance()
         self.powertrain = build_powertrain()
 
+        self.navigation = Navigation()
+
         log.info(f"Car {id} ready.")
 
-    async def connect_websocket(self, controller: str):
+    async def connect_websocket(self, controller: str):  # , ssl=self.ssl_context
         log.info(f"Connecting websocket to {controller}...")
-        # , ssl=self.ssl_context
         async with websockets.connect(controller) as websocket:
             log.info("Connected.")
             asyncio.create_task(self.send_location(websocket))
@@ -60,10 +65,12 @@ class Car:
                 x, y = self.location.get()
 
                 data = {
+                    "id": self.id,
+                    "state": self.powertrain.state.value,
                     "coordinates": {
                         "x": x,
                         "y": y,
-                    }
+                    },
                 }
 
                 log.debug("Sending location to websocket...")
@@ -88,11 +95,14 @@ class Car:
                     log.warn("Websocket message did not contain a path")
                     continue
 
-                for [x, y] in route["path"]:
-                    direction = Powertrain.Direction.Stop  # TODO
+                for waypoint in route["path"]:
+                    direction = self.navigation.calculate_direction(
+                        self.location.get(), waypoint
+                    )
                     self.powertrain.move(direction)
 
-                    await asyncio.sleep(0.2)
+                    while self.powertrain.state != State.Stopped:
+                        await asyncio.sleep(1)
 
                 self.powertrain.change_status("Available")
 

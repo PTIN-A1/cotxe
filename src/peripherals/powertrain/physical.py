@@ -3,7 +3,7 @@ import logging as log
 
 from PCA9685_smbus2 import PCA9685
 
-from peripherals.powertrain.powertrain import Powertrain
+from peripherals.powertrain.powertrain import Powertrain, State
 
 
 class PhysicalPowertrain(Powertrain):
@@ -39,6 +39,12 @@ class PhysicalPowertrain(Powertrain):
 
     def move(self, direction: Powertrain.Direction):
         log.debug(f"Moving motors in direction {direction}")
+
+        if direction == Powertrain.Direction.Stop:
+            self.state = State.Stopped
+        else:
+            self.state = State.Moving
+
         self.set_motor(self.Motor.TopLeft, direction)
         self.set_motor(self.Motor.TopRight, direction)
         self.set_motor(self.Motor.BottomRight, direction)
