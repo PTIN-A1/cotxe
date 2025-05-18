@@ -14,23 +14,26 @@ class VirtualPowertrain(Powertrain):
 
     def __init__(self):
         self.thread = threading.Thread(target=self.update_location)
+        self.thread.daemon = True
+        self.thread.start()
 
     def update_location(self):
-        match self.direction:
-            case Powertrain.Direction.Stop:
-                pass
-            case Powertrain.Direction.Forward:
-                Location().x += cos(self.angle) * self.speed
-                Location().y += sin(self.angle) * self.speed
-            case Powertrain.Direction.Back:
-                Location().x += cos(self.angle) * -self.speed
-                Location().y += sin(self.angle) * -self.speed
-            case Powertrain.Direction.Left:
-                Navigation.angle += Navigation.angular_velocity
-            case Powertrain.Direction.Right:
-                Navigation.angle += -Navigation.angular_velocity
+        while True:
+            match self.direction:
+                case Powertrain.Direction.Stop:
+                    pass
+                case Powertrain.Direction.Forward:
+                    Location.x += cos(Navigation.angle) * self.speed
+                    Location.y += sin(Navigation.angle) * self.speed
+                case Powertrain.Direction.Back:
+                    Location.x += cos(Navigation.angle) * -self.speed
+                    Location.y += sin(Navigation.angle) * -self.speed
+                case Powertrain.Direction.Left:
+                    Navigation.angle += Navigation.angular_velocity
+                case Powertrain.Direction.Right:
+                    Navigation.angle += -Navigation.angular_velocity
 
-        time.sleep(0.5)
+            time.sleep(0.5)
 
     def move(self, direction: Powertrain.Direction):
         if direction == Powertrain.Direction.Stop:

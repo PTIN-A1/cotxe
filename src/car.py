@@ -85,26 +85,28 @@ class Car:
     async def get_route(self, websocket):
         while True:
             try:
-                log.debug("Waiting for a new message from the websocket...")
+                log.info("Waiting for a new message from the websocket...")
                 recieved = await websocket.recv()
-                log.debug(f"Recieved new message from websocket: {recieved}")
+                log.info(f"Recieved new message from websocket: {recieved}")
                 route = json.loads(recieved)
-                log.debug("Parsed message to json succesfully.")
+                log.info("Parsed message to json succesfully.")
 
                 if "path" not in route:
                     log.warn("Websocket message did not contain a path")
                     continue
 
-                for waypoint in route["path"]:
+                for waypoint in route["path"]["path"]:
                     direction = self.navigation.calculate_direction(
                         self.location.get(), waypoint
                     )
                     self.powertrain.move(direction)
 
                     while self.powertrain.state != State.Stopped:
-                        await asyncio.sleep(1)
-
-                self.powertrain.change_status("Available")
+                        await asyncio.sleep(0.2)
+                        direction = self.navigation.calculate_direction(
+                            self.location.get(), waypoint
+                        )
+                        self.powertrain.move(direction)
 
             except Exception as e:
                 log.error(f"Failed to recieve from websocket: {e}")
