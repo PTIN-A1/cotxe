@@ -1,0 +1,9 @@
+# AP power measurement
+pyserial==3.5
+
+# Websocket
+websockets==15.0.1
+certifi==2025.1.31
+
+# Motors
+PCA9685-smbus2==0.0.6
