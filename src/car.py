@@ -85,11 +85,11 @@ class Car:
     async def get_route(self, websocket):
         while True:
             try:
-                log.info("Waiting for a new message from the websocket...")
+                log.debug("Waiting for a new message from the websocket...")
                 recieved = await websocket.recv()
                 log.info(f"Recieved new message from websocket: {recieved}")
                 route = json.loads(recieved)
-                log.info("Parsed message to json succesfully.")
+                log.debug("Parsed message to json succesfully.")
 
                 if "path" not in route:
                     log.warn("Websocket message did not contain a path")

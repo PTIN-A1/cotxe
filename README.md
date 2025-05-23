@@ -1,21 +1,12 @@
 # Software cotxe físic
 
-![Static Badge](https://img.shields.io/badge/Python-3.9-gray?style=for-the-badge&logo=python&logoColor=white&labelColor=%233671a2) ![Static Badge](https://img.shields.io/badge/Nix-24.11-gray?style=for-the-badge&logo=nixos&logoColor=white&labelColor=%237eb7e1) ![Static Badge](https://img.shields.io/badge/License-MIT%2FApache-gray?style=for-the-badge&logo=gitbook&logoColor=white&labelColor=blue)
+![Static Badge](https://img.shields.io/badge/Python-3.11-gray?style=for-the-badge&logo=python&logoColor=white&labelColor=%233671a2) ![Static Badge](https://img.shields.io/badge/Nix-24.11-gray?style=for-the-badge&logo=nixos&logoColor=white&labelColor=%237eb7e1) ![Static Badge](https://img.shields.io/badge/License-MIT%2FApache-gray?style=for-the-badge&logo=gitbook&logoColor=white&labelColor=blue)
 
 ## Setup:
-- És necessari activar els busos necessaris per al cotxe. Utilitzeu
+- S'ha d'instal·lar les dependències de python a l'entorn virtual:
   ```bash
-  rsetup
-  ```
-  Per activar els busos `I2C7`, `PWM0`, `PWM0` i `UART2`. (Overlays > Manage overlays)
-
-- És necessari afegir l'usuari al grup `i2c` per que tingui accés als busos dels motors
-  ```bash
-  sudo usermod -aG i2c radxa
-  ```
-
-- S'ha d'instal·lar les dependències de python
-  ```bash
+  python -m venv venv
+  source venv/bin/activate
   pip install -r requeriments.txt
   ```
 

@@ -7,3 +7,6 @@ certifi==2025.1.31
 
 # Motors
 PCA9685-smbus2==0.0.6
+
+# Ultrasonic sensor and bumper
+gpiozero==2.0.1
