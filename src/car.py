@@ -13,6 +13,8 @@ from peripherals.distance.distance import Distance
 from peripherals.distance.build import build_distance
 from peripherals.powertrain.powertrain import Powertrain, State
 from peripherals.powertrain.build import build_powertrain
+from peripherals.bumper.bumper import Bumper
+from peripherals.bumper.build import build_bumper
 
 from logic.navigation import Navigation
 
@@ -24,6 +26,7 @@ class Car:
     location: Location
     distance: Distance
     powertrain: Powertrain
+    bumper: Bumper
 
     navigation: Navigation
 
@@ -42,6 +45,7 @@ class Car:
         self.location = build_location()
         self.distance = build_distance()
         self.powertrain = build_powertrain()
+        self.bumper = build_bumper()
 
         self.navigation = Navigation()
 
@@ -51,7 +55,7 @@ class Car:
         log.info(f"Connecting websocket to {controller}...")
         async with websockets.connect(controller) as websocket:
             log.info("Connected.")
-            asyncio.create_task(self.send_location(websocket))
+            asyncio.create_task(self.send_state(websocket))
             asyncio.create_task(self.get_route(websocket))
 
             while True:
@@ -59,7 +63,7 @@ class Car:
 
         log.warn("Disconnected from websocket.")
 
-    async def send_location(self, websocket):
+    async def send_state(self, websocket):
         while True:
             try:
                 x, y = self.location.get()
@@ -67,6 +71,10 @@ class Car:
                 data = {
                     "id": self.id,
                     "state": self.powertrain.state.value,
+                    "checkup": {
+                        "collision": self.bumper.collisioned,
+                        "motherboard": "TODO",
+                    },
                     "coordinates": {
                         "x": x,
                         "y": y,
@@ -110,14 +118,3 @@ class Car:
 
             except Exception as e:
                 log.error(f"Failed to recieve from websocket: {e}")
-
-    async def monitor_and_stop(self):
-        while True:
-            distance = self.distance.measure()
-
-            if distance is not None:
-                log.debug(f"Obstacle detected at {distance}")
-
-                self.powertrain.direction(Powertrain.Direction.Stop)
-
-            await asyncio.sleep(0.2)
