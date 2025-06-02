@@ -20,7 +20,7 @@ class Esp32:
         log.info(f"Ignoring the following BSSIDs for the AP scan: {ignore}")
         self.ignore = ignore
 
-    async def get_ap_rssis(self) -> dict:
+    def get_ap_rssis(self) -> dict:
         access_points = []
 
         recieving = False
