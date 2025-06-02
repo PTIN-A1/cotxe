@@ -10,3 +10,6 @@ PCA9685-smbus2==0.0.6
 
 # Ultrasonic sensor and bumper
 gpiozero==2.0.1
+
+# Location prediction
+joblib==1.5.1
