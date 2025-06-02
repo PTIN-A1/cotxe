@@ -9,8 +9,8 @@ from peripherals.bumper.bumper import Bumper, Side
 class Microswitches(Bumper):
     front = Button(21)
     back = Button(20)
-    left = Button(19)
-    right = Button(18)
+    left = Button(16)
+    right = Button(12)
 
     def __init__(self):
         self.thread = threading.Thread(target=self.read_switches)
