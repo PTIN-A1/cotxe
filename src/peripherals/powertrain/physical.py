@@ -15,7 +15,7 @@ class PhysicalPowertrain(Powertrain):
         BottomLeft = (2, 3, 2)
         BottomRight = (3, 4, 5)
 
-    def powertain(self, interface: str):
+    def connect(self, interface: str):
         log.info(f"Connecting to powertrain on interface {interface}...")
         self.pwm = PCA9685.PCA9685(interface=interface)
         self.pwm.set_pwm_freq(50)

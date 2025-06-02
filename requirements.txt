@@ -15,4 +15,4 @@ RPi.GPIO==0.7.1
 pigpio==1.78 
 
 # Location prediction
-joblib==1.5.1
+sckit-learn==1.6.1
