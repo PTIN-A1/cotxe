@@ -13,7 +13,8 @@ class PhysicalLocation(Location):
 
     def __init__(self):
         serial_port = os.getenv("CAR_SERIAL_PORT", "/dev/ttyUSB0")
-        model_path = os.getenv("LOCATION_MODEL_PATH", "assets/position_model.pkl")
+        model_path = os.getenv("LOCATION_MODEL_PATH",
+                               "assets/position_model.pkl")
 
         ignore = [
             ap.strip() for ap in os.getenv("CAR_AP_IGNORE", "").split(",") if ap.strip()
@@ -21,7 +22,8 @@ class PhysicalLocation(Location):
 
         self.model, self.known_bssids = joblib.load(model_path)
 
-        self.esp32 = Esp32().connect_serial(serial_port, ignore)
+        self.esp32 = Esp32()
+        self.esp32.connect_serial(serial_port, ignore)
 
         self.thread = threading.Thread(target=self.measure)
         self.thread.daemon = True
