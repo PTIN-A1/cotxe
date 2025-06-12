@@ -6,17 +6,16 @@ from peripherals.bumper.bumper import Bumper, Side
 
 
 class Microswitches(Bumper):
-    from gpiozero import Button
-
-    front = Button(21)
-    back = Button(20)
-    left = Button(16)
-    right = Button(12)
-
     def __init__(self):
         self.thread = threading.Thread(target=self.read_switches)
         self.thread.daemon = True
         self.thread.start()
+
+        from gpiozero import Button
+        self.front = Button(21)
+        self.back = Button(20)
+        self.left = Button(16)
+        self.right = Button(12)
 
     def read_switches(self):
         while True:
