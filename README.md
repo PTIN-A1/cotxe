@@ -9,6 +9,23 @@
   source venv/bin/activate
   pip install -r requeriments.txt
   ```
+- Es poden establir variables d'entorn per definir el ID del cotxe i el URI del websocket:
+  ```bash
+  export CAR_ID=<nombre_hexadecimal_id_cotxe> # Si no s'estableix, el valor per defecte és 0x346B9B94
+  export CAR_CONTROLLER=<uri_websocket> # Si no s'estableix, el valor per defecte és ws://192.168.10.11:8765
+  ```
+- També es pot definir una variable d'entorn per indicar al cotxe que és la versió física:
+  ```bash
+  export ENVIRONMENT=physical
+  ```
+- I una per activar el logging:
+  ```
+  export CAR_LOG_LEVEL=<nivell_de_log> # Si no s'estableix, el valor per defecte és INFO. Nivells: DEBUG, INFO, WARNING, ERROR, CRITICAL
+  ```
+- El cotxe es pot enjagar amb la comanda següent:
+  ```bash
+  python src/main.py
+  ```
 
 ## Guia d'estil:
 - És necessari formatejar el codi amb autopep8 abans de enviar-lo a origin.
