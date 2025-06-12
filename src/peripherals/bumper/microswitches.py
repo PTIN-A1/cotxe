@@ -1,12 +1,13 @@
 import threading
 import time
 
-from gpiozero import Button
 
 from peripherals.bumper.bumper import Bumper, Side
 
 
 class Microswitches(Bumper):
+    from gpiozero import Button
+
     front = Button(21)
     back = Button(20)
     left = Button(16)

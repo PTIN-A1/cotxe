@@ -72,7 +72,7 @@ class Car:
                     "id": self.id,
                     "state": self.powertrain.state.value,
                     "checkup": {
-                        "collision": self.bumper.collisioned,
+                        "collision": self.bumper.collisioned.value,
                         "motherboard": "TODO",
                     },
                     "coordinates": {
