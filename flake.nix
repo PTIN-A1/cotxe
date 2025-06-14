@@ -1,69 +1,83 @@
 {
-    description = "Software pel cotxe, tant físic com virtual";
+  description = "Software pel cotxe, tant físic com virtual";
 
-    inputs = {
-        nixpkgs.url     = "github:NixOS/nixpkgs/nixos-24.11";
-        flake-utils.url = "github:numtide/flake-utils";
-    };
+  inputs = {
+    nixpkgs.url     = "github:NixOS/nixpkgs/nixos-24.11";
+    flake-utils.url = "github:numtide/flake-utils";
+  };
 
-    outputs = { self, nixpkgs, flake-utils, ... }:
-        flake-utils.lib.eachDefaultSystem (system:
-            let
-                pkgs = import nixpkgs { inherit system; };
-                
-                build_tools = with pkgs; [ 
-                    python3
-                ];
+  outputs = { self, nixpkgs, flake-utils, ... }:
+    flake-utils.lib.eachDefaultSystem (system:
+      let
+        pkgs = import nixpkgs { inherit system; };
+        pythonEnv = pkgs.python312.withPackages (ps: with ps; [
+          certifi
+          websockets
+          joblib
+          pyserial
+          scikit-learn
+          gpiozero
+          # lgpio
+          # RPi.GPIO
+          # pigpio
+          # PCA9685-smbus2
+        ]);
 
-                dev_tools = with pkgs.python312Packages; [
-                    pip
+        # Empaquetar projecte com script executable
+        appPackage = pkgs.stdenv.mkDerivation {
+          name = "cotxe-ptin";
+          src = ./.;
 
-                    bandit
-                    flake8
+          # Fer que al contenidor existi la ruta:
+          # /nix/store/...-cotxe-ptin/app/src/main.py
+          installPhase = ''
+            mkdir -p $out/app
+            cp -r src $out/app/src
+            cp requirements.txt $out/app/
+          '';
+        };
 
-                    python-lsp-server
-                    python-lsp-ruff
-                    autopep8
-                ];
-                
-                native_package_build = pkgs.python312Packages.buildPythonPackage {
-                    pname = "cotxe-ptin";
-                    version = "0.4.0";
+        docker_image_build = pkgs.dockerTools.streamLayeredImage {
+          name = "cotxe-ptin";
+          tag = "0.5.0";
 
-                    src = pkgs.lib.cleanSource ./.;
-                    
-                    propagatedBuildInputs = with pkgs.python312Packages; [
-                        pyserial
-                        certifi
-                        websockets
-                    ];
-                };
+          contents = [
+            pythonEnv
+            pkgs.coreutils
+            pkgs.busybox
+            appPackage
+          ];
 
-                # ES FARÀ SERVIR LA IMATGE DE DOCKER CONSTRUIDA AMB DOCKERFILE, EL QUE HI HA AQUÍ NO ES FARÀ SERVIR
-                docker_image_build = pkgs.dockerTools.buildImage {
-                    name = "cotxe-ptin";
-                    tag = "0.3.0";
+          config = {
+            WorkingDir = "/app";
+            Cmd = [ "python" "src/main.py" ];
+            Env = [
+              "PYTHONUNBUFFERED=1"
+              "CAR_ID=0x346B9B94"
+              "CAR_CONTROLLER=ws://192.168.10.11:8765"
+              "CAR_LOG_LEVEL=INFO"
+            ];
+          };
+        };
+      in {
+        # Per poder construir la imatge amb "nix build"
+        packages.default = docker_image_build;
 
-                    contents = [ native_package_build pkgs.coreutils pkgs.busybox ];
+        devShells.default = pkgs.mkShell {
+          buildInputs = with pkgs; [
+            python3
+            python3.pkgs.pip
+            python3.pkgs.certifi
+            python3.pkgs.websockets
+          ];
 
-                    config = {
-                        Cmd = [ "${native_package_build}/bin/cotxe-ptin" ];
-                        Env = [ "PYTHONUNBUFFERED=1" 
-                                "CAR_TYPE=virtual"
-                        ]; # PYTHONBUFFERED=1 -> Sense buffer, per tant els missatges s'imprimiran per la sortida estàndard cada vegada que s'executi un print
-                    }; # CAR_TYPE -> pot ser "virtual" o "physical"
-                };
-
-            in { 
-                devShells.default = pkgs.mkShell {
-                    buildInputs = build_tools ++ dev_tools;
-
-                    shellHook = ''
-                        python -m venv .venv
-                        source .venv/bin/activate
-                        pip install -r requirements.txt
-                    '';
-                };
-            }
-        );
+          shellHook = ''
+            python -m venv .venv
+            source .venv/bin/activate
+            pip install -r requirements.txt
+          '';
+        };
+      }
+    );
 }
+

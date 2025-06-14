@@ -1,5 +1,9 @@
 **/__pycache__
 .venv
+<<<<<<< HEAD
+=======
+venv
+>>>>>>> a713f028ad786e48361dc06b97ac86277a6993d3
 
 .direnv
 .envrc

@@ -9,7 +9,10 @@ from logic.navigation import Navigation
 
 class VirtualPowertrain(Powertrain):
     direction: Powertrain.Direction = Powertrain.Direction.Stop
+<<<<<<< HEAD
     angle: float = 0
+=======
+>>>>>>> a713f028ad786e48361dc06b97ac86277a6993d3
     speed: float = 0.01
 
     def __init__(self):

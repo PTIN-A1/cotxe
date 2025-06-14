@@ -13,6 +13,11 @@ from peripherals.distance.distance import Distance
 from peripherals.distance.build import build_distance
 from peripherals.powertrain.powertrain import Powertrain, State
 from peripherals.powertrain.build import build_powertrain
+<<<<<<< HEAD
+=======
+from peripherals.bumper.bumper import Bumper
+from peripherals.bumper.build import build_bumper
+>>>>>>> a713f028ad786e48361dc06b97ac86277a6993d3
 
 from logic.navigation import Navigation
 
@@ -24,6 +29,10 @@ class Car:
     location: Location
     distance: Distance
     powertrain: Powertrain
+<<<<<<< HEAD
+=======
+    bumper: Bumper
+>>>>>>> a713f028ad786e48361dc06b97ac86277a6993d3
 
     navigation: Navigation
 
@@ -42,6 +51,10 @@ class Car:
         self.location = build_location()
         self.distance = build_distance()
         self.powertrain = build_powertrain()
+<<<<<<< HEAD
+=======
+        self.bumper = build_bumper()
+>>>>>>> a713f028ad786e48361dc06b97ac86277a6993d3
 
         self.navigation = Navigation()
 
@@ -51,7 +64,11 @@ class Car:
         log.info(f"Connecting websocket to {controller}...")
         async with websockets.connect(controller) as websocket:
             log.info("Connected.")
+<<<<<<< HEAD
             asyncio.create_task(self.send_location(websocket))
+=======
+            asyncio.create_task(self.send_state(websocket))
+>>>>>>> a713f028ad786e48361dc06b97ac86277a6993d3
             asyncio.create_task(self.get_route(websocket))
 
             while True:
@@ -59,7 +76,11 @@ class Car:
 
         log.warn("Disconnected from websocket.")
 
+<<<<<<< HEAD
     async def send_location(self, websocket):
+=======
+    async def send_state(self, websocket):
+>>>>>>> a713f028ad786e48361dc06b97ac86277a6993d3
         while True:
             try:
                 x, y = self.location.get()
@@ -67,6 +88,13 @@ class Car:
                 data = {
                     "id": self.id,
                     "state": self.powertrain.state.value,
+<<<<<<< HEAD
+=======
+                    "checkup": {
+                        "collision": self.bumper.collisioned.value,
+                        "motherboard": "TODO",
+                    },
+>>>>>>> a713f028ad786e48361dc06b97ac86277a6993d3
                     "coordinates": {
                         "x": x,
                         "y": y,
@@ -85,11 +113,19 @@ class Car:
     async def get_route(self, websocket):
         while True:
             try:
+<<<<<<< HEAD
                 log.info("Waiting for a new message from the websocket...")
                 recieved = await websocket.recv()
                 log.info(f"Recieved new message from websocket: {recieved}")
                 route = json.loads(recieved)
                 log.info("Parsed message to json succesfully.")
+=======
+                log.debug("Waiting for a new message from the websocket...")
+                recieved = await websocket.recv()
+                log.info(f"Recieved new message from websocket: {recieved}")
+                route = json.loads(recieved)
+                log.debug("Parsed message to json succesfully.")
+>>>>>>> a713f028ad786e48361dc06b97ac86277a6993d3
 
                 if "path" not in route:
                     log.warn("Websocket message did not contain a path")
@@ -110,6 +146,7 @@ class Car:
 
             except Exception as e:
                 log.error(f"Failed to recieve from websocket: {e}")
+<<<<<<< HEAD
 
     async def monitor_and_stop(self):
         while True:
@@ -121,3 +158,5 @@ class Car:
                 self.powertrain.direction(Powertrain.Direction.Stop)
 
             await asyncio.sleep(0.2)
+=======
+>>>>>>> a713f028ad786e48361dc06b97ac86277a6993d3
