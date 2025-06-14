@@ -1,29 +1,20 @@
 # Software cotxe físic
 
-<<<<<<< HEAD
-![Static Badge](https://img.shields.io/badge/Python-3.9-gray?style=for-the-badge&logo=python&logoColor=white&labelColor=%233671a2) ![Static Badge](https://img.shields.io/badge/Nix-24.11-gray?style=for-the-badge&logo=nixos&logoColor=white&labelColor=%237eb7e1) ![Static Badge](https://img.shields.io/badge/License-MIT%2FApache-gray?style=for-the-badge&logo=gitbook&logoColor=white&labelColor=blue)
-=======
 ![Static Badge](https://img.shields.io/badge/Python-3.11-gray?style=for-the-badge&logo=python&logoColor=white&labelColor=%233671a2) ![Static Badge](https://img.shields.io/badge/Nix-24.11-gray?style=for-the-badge&logo=nixos&logoColor=white&labelColor=%237eb7e1) ![Static Badge](https://img.shields.io/badge/License-MIT%2FApache-gray?style=for-the-badge&logo=gitbook&logoColor=white&labelColor=blue)
->>>>>>> a713f028ad786e48361dc06b97ac86277a6993d3
 
 ## Setup:
 - S'ha d'instal·lar les dependències de python a l'entorn virtual:
   ```bash
   python -m venv venv
   source venv/bin/activate
-  pip install -r requeriments.txt
+  pip install -r requirements.txt
   ```
 - Es poden establir variables d'entorn per definir el ID del cotxe i el URI del websocket:
   ```bash
   export CAR_ID=<nombre_hexadecimal_id_cotxe> # Si no s'estableix, el valor per defecte és 0x346B9B94
   export CAR_CONTROLLER=<uri_websocket> # Si no s'estableix, el valor per defecte és ws://192.168.10.11:8765
   ```
-<<<<<<< HEAD
-
-- S'ha d'instal·lar les dependències de python
-=======
 - També es pot definir una variable d'entorn per indicar al cotxe que és la versió física:
->>>>>>> a713f028ad786e48361dc06b97ac86277a6993d3
   ```bash
   export ENVIRONMENT=physical
   ```

@@ -1,13 +1,14 @@
 from enum import Enum
 import logging as log
 
-from PCA9685_smbus2 import PCA9685
+# Comentar import si s'està fent servir un vehicle virtual
+# from PCA9685_smbus2 import PCA9685
 
 from peripherals.powertrain.powertrain import Powertrain, State
 
 
 class PhysicalPowertrain(Powertrain):
-    pwm: PCA9685
+    # pwm: PCA9685
 
     class Motor(Enum):
         TopLeft = (0, 0, 1)
@@ -15,14 +16,10 @@ class PhysicalPowertrain(Powertrain):
         BottomLeft = (2, 3, 2)
         BottomRight = (3, 4, 5)
 
-<<<<<<< HEAD
-    def connect_powertain(self, interface: str):
-=======
     def connect(self, interface: str):
->>>>>>> a713f028ad786e48361dc06b97ac86277a6993d3
         log.info(f"Connecting to powertrain on interface {interface}...")
-        self.pwm = PCA9685.PCA9685(interface=interface)
-        self.pwm.set_pwm_freq(50)
+        # self.pwm = PCA9685.PCA9685(interface=interface)
+        # self.pwm.set_pwm_freq(50)
         log.info("Successfully connected to and configured the powertrain.")
 
     def set_motor(self, motor: Motor, direction: Powertrain.Direction):
@@ -30,16 +27,19 @@ class PhysicalPowertrain(Powertrain):
         duty = direction.value[index]
 
         if duty > 0:
-            self.pwm.set_pwm(channel_a, 0, 0)
-            self.pwm.set_pwm(channel_b, 0, duty)
+            pass
+            # self.pwm.set_pwm(channel_a, 0, 0)
+            # self.pwm.set_pwm(channel_b, 0, duty)
 
         elif duty < 0:
-            self.pwm.set_pwm(channel_a, 0, abs(duty))
-            self.pwm.set_pwm(channel_b, 0, 0)
+            pass
+            # self.pwm.set_pwm(channel_a, 0, abs(duty))
+            # self.pwm.set_pwm(channel_b, 0, 0)
 
         else:
-            self.pwm.set_pwm(channel_a, 0, 4095)
-            self.pwm.set_pwm(channel_b, 0, 4095)
+            pass
+            # self.pwm.set_pwm(channel_a, 0, 4095)
+            # self.pwm.set_pwm(channel_b, 0, 4095)
 
     def move(self, direction: Powertrain.Direction):
         log.debug(f"Moving motors in direction {direction}")
