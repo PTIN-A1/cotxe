@@ -15,6 +15,7 @@ from peripherals.powertrain.powertrain import Powertrain, State
 from peripherals.powertrain.build import build_powertrain
 from peripherals.bumper.bumper import Bumper
 from peripherals.bumper.build import build_bumper
+# from peripherals.motherboard.motherboard import Motherboard
 
 from logic.navigation import Navigation
 
@@ -27,6 +28,7 @@ class Car:
     distance: Distance
     powertrain: Powertrain
     bumper: Bumper
+    # motherboard: Motherboard
 
     navigation: Navigation
 
@@ -67,7 +69,8 @@ class Car:
         while True:
             try:
                 x, y = self.location.get()
-
+                # motherboard_info = self.motherboard.read_temperature()
+                
                 data = {
                     "id": self.id,
                     "state": self.powertrain.state.value,
