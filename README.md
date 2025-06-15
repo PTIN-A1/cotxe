@@ -27,7 +27,43 @@
   python src/main.py
   ```
 
-## Guia d'estil:
+# Software cotxe virtual
+
+## Setup:
+
+- Es poden establir variables d'entorn per definir paràmetres com el ID del cotxe i el URI del websocket a dins de "Env", al fitxer flake.nix.
+  Com al cotxe físic, els valors per defecte són els següents:
+  ```
+  "CAR_ID=0x346B9B94"
+  "CAR_CONTROLLER=ws://192.168.10.11:8765"
+  ```
+
+- Generar executable "result":
+  ```bash
+  nix --extra-experimental-features nix-command --extra-experimental-features flakes build
+  ```
+
+- Crear la imatge de Docker en format .tar.gz:
+  ```bash
+  ./result > cotxe-image.tar.gz
+  ```
+  
+- Carregar imatge de Docker:
+  ```bash
+  docker load < cotxe-image.tar.gz
+  ```
+
+- Confirmar que la imatge s'ha carregat:
+  ```bash
+  docker images
+  ```
+
+- Executar cotxe virtual:
+  ```bash
+  docker run --rm cotxe-ptin:0.5.0
+  ```
+
+# Guia d'estil:
 - És necessari formatejar el codi amb autopep8 abans de enviar-lo a origin.
   ```bash
   autopep8 --in-place --recursive src/

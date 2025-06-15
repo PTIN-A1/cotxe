@@ -1,0 +1,66 @@
+version: '3.8'
+
+services:
+  cotxe0:
+    image: cotxe-ptin:0.5.0
+    environment:
+      - CAR_ID=0x346B9B90
+      - CAR_CONTROLLER=ws://192.168.10.11:8765
+      - CAR_LOG_LEVEL=INFO
+
+  cotxe1:
+    image: cotxe-ptin:0.5.0
+    environment:
+      - CAR_ID=0x346B9B91
+      - CAR_CONTROLLER=ws://192.168.10.11:8765
+      - CAR_LOG_LEVEL=INFO
+
+  cotxe2:
+    image: cotxe-ptin:0.5.0
+    environment:
+      - CAR_ID=0x346B9B92
+      - CAR_CONTROLLER=ws://192.168.10.11:8765
+      - CAR_LOG_LEVEL=INFO
+
+  cotxe3:
+    image: cotxe-ptin:0.5.0
+    environment:
+      - CAR_ID=0x346B9B93
+      - CAR_CONTROLLER=ws://192.168.10.11:8765
+      - CAR_LOG_LEVEL=INFO
+
+  cotxe4:
+    image: cotxe-ptin:0.5.0
+    environment:
+      - CAR_ID=0x346B9B94
+      - CAR_CONTROLLER=ws://192.168.10.11:8765
+      - CAR_LOG_LEVEL=INFO
+
+  cotxe5:
+    image: cotxe-ptin:0.5.0
+    environment:
+      - CAR_ID=0x346B9B95
+      - CAR_CONTROLLER=ws://192.168.10.11:8765
+      - CAR_LOG_LEVEL=INFO
+
+  cotxe6:
+    image: cotxe-ptin:0.5.0
+    environment:
+      - CAR_ID=0x346B9B96
+      - CAR_CONTROLLER=ws://192.168.10.11:8765
+      - CAR_LOG_LEVEL=INFO
+
+  cotxe7:
+    image: cotxe-ptin:0.5.0
+    environment:
+      - CAR_ID=0x346B9B97
+      - CAR_CONTROLLER=ws://192.168.10.11:8765
+      - CAR_LOG_LEVEL=INFO
+
+  cotxe8:
+    image: cotxe-ptin:0.5.0
+    environment:
+      - CAR_ID=0x346B9B98
+      - CAR_CONTROLLER=ws://192.168.10.11:8765
+      - CAR_LOG_LEVEL=INFO
+
