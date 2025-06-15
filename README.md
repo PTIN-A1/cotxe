@@ -63,6 +63,23 @@
   docker run --rm cotxe-ptin:0.5.0
   ```
 
+## Múltiples cotxes virtuals
+
+- Una vegada carregada la imatge cotxe-ptin:0.5.0, es poden activar 9 cotxes virtuals amb la comanda:
+  ```bash
+  docker compose up
+  ```
+
+- Si es desitja que els cotxes estiguin en segon pla, es pot afegir l'opció -d:
+  ```bash
+  docker compose up -d
+  ```
+
+- Es pot executar 'Ctrl+C' per aturar els cotxes si s'han arrencat en primer pla. Si s'ha utilitzat l'opció -d, es poden aturar amb:
+  ```bash
+  docker compose down
+  ```
+
 # Guia d'estil:
 - És necessari formatejar el codi amb autopep8 abans de enviar-lo a origin.
   ```bash
