@@ -1,7 +1,7 @@
 from enum import Enum
 import logging as log
 
-# Comentar import si s'està fent servir un vehicle virtual
+# Comentar import i totes les línies amb "self.pwm" si s'està fent servir un vehicle virtual
 # from PCA9685_smbus2 import PCA9685
 
 from peripherals.powertrain.powertrain import Powertrain, State

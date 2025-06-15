@@ -59,6 +59,7 @@ class Car:
             log.info("Connected.")
             asyncio.create_task(self.send_state(websocket))
             asyncio.create_task(self.get_route(websocket))
+            # asyncio.create_task(self.monitor_distance(websocket))
 
             while True:
                 await asyncio.sleep(1)
@@ -69,6 +70,7 @@ class Car:
         while True:
             try:
                 x, y = self.location.get()
+                # obstacle_detected = self.distance.get()
                 # motherboard_info = self.motherboard.read_temperature()
                 
                 data = {
@@ -82,6 +84,7 @@ class Car:
                         "x": x,
                         "y": y,
                     },
+                    #"obstacle": obstacle_detected,
                 }
 
                 log.debug("Sending location to websocket...")
@@ -118,6 +121,21 @@ class Car:
                             self.location.get(), waypoint
                         )
                         self.powertrain.move(direction)
+
+            except Exception as e:
+                log.error(f"Failed to recieve from websocket: {e}")
+
+    async def monitor_distance(self, websocket):
+        while True:
+            try:
+                distance = self.get_distance()
+                if distance is not None and distance < 30.0:
+                    print(f"[Seguretat] Obstacle at {distance} cm! Stopping engines.")
+                    self.distance.set(1)
+                    # Executar self.powertrain.move(Powertrain.Direction.Stop) i mandar un avís per websocket?
+                else:
+                    self.distance.set(0)
+                await asyncio.sleep(0.5)
 
             except Exception as e:
                 log.error(f"Failed to recieve from websocket: {e}")
