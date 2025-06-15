@@ -1,15 +1,18 @@
 {
   description = "Software pel cotxe, tant físic com virtual";
-
+  
+  # Fonts externes
   inputs = {
     nixpkgs.url     = "github:NixOS/nixpkgs/nixos-24.11";
     flake-utils.url = "github:numtide/flake-utils";
   };
 
+  # El que genera el flake
   outputs = { self, nixpkgs, flake-utils, ... }:
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = import nixpkgs { inherit system; };
+        # Entorn Python personalitzat
         pythonEnv = pkgs.python312.withPackages (ps: with ps; [
           certifi
           websockets
@@ -23,7 +26,7 @@
           # PCA9685-smbus2
         ]);
 
-        # Empaquetar projecte com script executable
+        # Empaquetar projecte com script executable perquè la imatge de Docker pugui accedir al codi font
         appPackage = pkgs.stdenv.mkDerivation {
           name = "cotxe-ptin";
           src = ./.;
@@ -37,6 +40,7 @@
           '';
         };
 
+        # Construir imatge de Docker
         docker_image_build = pkgs.dockerTools.streamLayeredImage {
           name = "cotxe-ptin";
           tag = "0.5.0";

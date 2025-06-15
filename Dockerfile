@@ -1,3 +1,5 @@
+# DON'T USE THIS FILE
+
 # Imatge base
 FROM python:3.12-slim
 
