@@ -1,6 +1,6 @@
 # Software cotxe físic
 
-![Static Badge](https://img.shields.io/badge/Python-3.11-gray?style=for-the-badge&logo=python&logoColor=white&labelColor=%233671a2) ![Static Badge](https://img.shields.io/badge/Nix-24.11-gray?style=for-the-badge&logo=nixos&logoColor=white&labelColor=%237eb7e1) ![Static Badge](https://img.shields.io/badge/License-MIT%2FApache-gray?style=for-the-badge&logo=gitbook&logoColor=white&labelColor=blue)
+![Static Badge](https://img.shields.io/badge/Python-3.11-gray?style=for-the-badge&logo=python&logoColor=white&labelColor=%233671a2) ![Static Badge](https://img.shields.io/badge/Nix-24.11-gray?style=for-the-badge&logo=nixos&logoColor=white&labelColor=%237eb7e1) ![Static Badge](https://img.shields.io/badge/License-MIT%2FApache-gray?style=for-the-badge&logo=gitbook&logoColor=white&labelColor=blue) ![Static Badge](https://img.shields.io/badge/DOCKER-28.1.1-gray?style=for-the-badge&logo=docker&logoColor=white&labelColor=%2336ace2)
 
 ## Setup:
 - S'ha d'instal·lar les dependències de python a l'entorn virtual:
